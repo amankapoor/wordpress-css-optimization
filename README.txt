@@ -5,7 +5,7 @@ Tags: css, critical css, async, minify, editor, concat, minifier, concatenation,
 Requires at least: 4.0
 Requires PHP: 5.4
 Tested up to: 4.9.4
-Stable tag: 0.0.38
+Stable tag: 0.0.41
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -49,6 +49,17 @@ Documentation is available on [Github](https://github.com/o10n-x/wordpress-css-o
 
 
 == Changelog ==
+
+= 0.0.41 =
+* Bugfix: async exclude filter not working.
+* Improved: plugin related admin scripts are now loaded using `wp_add_inline_script`.
+* Added: footer stylesheet load position (before `domready`) (AJ @ [WpFASTER.org](https://www.wpfaster.org/))
+
+= 0.0.40 =
+* Improved: `@import` filter of CssMin.php modified with optimization proxy to support external stylesheets.
+
+= 0.0.39 =
+* Bugfix: Critical CSS minify config not saving correctly.
 
 = 0.0.38 =
 * Bugfix: CDN + CDN mask option not working.

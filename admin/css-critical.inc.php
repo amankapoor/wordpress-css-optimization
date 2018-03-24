@@ -253,7 +253,7 @@ $files_list = $view->critical_css_files();
         <th scope="row">Minify</th>
         <td>
             <label><input type="checkbox" value="1" name="o10n[css.critical.minify.enabled]" data-json-ns="1"<?php $checked('css.critical.minify.enabled'); ?> /> Enabled</label>
-            <p class="description">Compress CSS using <a href="https://github.com/natxet/CssMin" target="_blank">PHP CssMin</a>.</p>
+            <p class="description">Compress CSS using <a href="https://github.com/JoeScylla/cssmin" target="_blank">PHP CssMin</a>.</p>
         </td>
     </tr>
 </table>
@@ -271,8 +271,8 @@ $files_list = $view->critical_css_files();
                   PHP CssMin Options
                 </th>
                 <th>
-                    <p class="poweredby">Powered by <a href="https://github.com/natxet/CssMin" target="_blank">CssMin</a><span class="google-code"><a href="https://code.google.com/archive/p/cssmin/" target="_blank"><img src="<?php print trailingslashit(O10N_CORE_URI); ?>admin/images/google-code-18h.png" width="25" height="18" border="0" alt="Google Code" title="View on Google Code" /></a></span><span class="star">
-                    <a class="github-button" data-manual="1" href="https://github.com/natxet/CssMin" data-icon="octicon-star" data-show-count="true" aria-label="Star natxet/CssMin on GitHub">Star</a></span>
+                    <p class="poweredby">Powered by <a href="https://github.com/JoeScylla/cssmin" target="_blank">CssMin</a><span class="google-code"><a href="https://code.google.com/archive/p/cssmin/" target="_blank"><img src="<?php print trailingslashit(O10N_CORE_URI); ?>admin/images/google-code-18h.png" width="25" height="18" border="0" alt="Google Code" title="View on Google Code" /></a></span><span class="star">
+                    <a class="github-button" data-manual="1" href="https://github.com/JoeScylla/cssmin" data-icon="octicon-star" data-show-count="true" aria-label="Star JoeScylla/cssmin on GitHub">Star</a></span>
                     </p>
                 </th> 
             </tr>

@@ -82,6 +82,7 @@ $this->form_start(__('CSS Delivery Optimization', 'o10n'), 'css');
         <td>
             <select name="o10n[css.async.load_position]" data-ns-change="css.async">
                 <option value="header"<?php $selected('css.async.load_position', 'header'); ?>>Header</option>
+                <option value="footer"<?php $selected('css.async.load_position', 'footer'); ?>>Footer</option>
                 <option value="timing"<?php $selected('css.async.load_position', 'timing'); ?>>Timed</option>
             </select>
             <p class="description">Select the position of the HTML document where the downloading of CSS will start.</p>

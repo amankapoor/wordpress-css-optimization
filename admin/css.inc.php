@@ -21,7 +21,7 @@ $this->form_start(__('CSS Optimization', 'optimization'), 'css');
 		<th scope="row">Minify</th>
 		<td>
 			<label><input type="checkbox" value="1" name="o10n[css.minify.enabled]" data-json-ns="1"<?php $checked('css.minify.enabled'); ?> /> Enabled</label>
-			<p class="description">Compress CSS using <a href="https://github.com/natxet/CssMin" target="_blank">PHP CssMin</a>.</p>
+			<p class="description">Compress CSS using <a href="https://github.com/JoeScylla/cssmin" target="_blank">PHP CssMin</a>.</p>
 <?php
 /*
 $x = $get('css.minify.filter.enabled');
@@ -52,34 +52,6 @@ $x = $get('css.minify.filter.enabled');
                 <p class="description">Enter (parts of) stylesheet <code>&lt;link&gt;</code> elements to exclude from minification. One match string per line.</p>
             </div>
 
-            <div data-ns="css.minify"<?php $visible('css.minify'); ?> class="suboption">
-                <label><input type="checkbox" value="1" name="o10n[css.minify.rebase.enabled]" data-json-ns="1"<?php $checked('css.minify.rebase.enabled'); ?> /> Rebase relative URI's in CSS</label>
-            </div>
-
-            <div data-ns="css.minify"<?php $visible('css.minify'); ?> class="suboption">
-                <label><input type="checkbox" value="1" name="o10n[css.minify.import.enabled]" data-json-ns="1"<?php $checked('css.minify.import.enabled'); ?> /> Process <code>@import</code> links</label>
-            </div>
-
-            <p data-ns="css.minify.import"<?php $visible('css.minify.import'); ?>>
-                <label><input type="checkbox" value="1" name="o10n[css.minify.import.filter.enabled]" data-json-ns="1"<?php $checked('css.minify.import.filter.enabled'); ?> /> Enable filter</label>
-                <span data-ns="css.minify.import.filter"<?php $visible('css.minify.import.filter'); ?>>
-                    <select name="o10n[css.minify.import.filter.type]" data-ns-change="css.minify.import.filter" data-json-default="<?php print esc_attr(json_encode('include')); ?>">
-                        <option value="include"<?php $selected('css.minify.import.filter.type', 'include'); ?>>Include List</option>
-                        <option value="exclude"<?php $selected('css.minify.import.filter.type', 'exclude'); ?>>Exclude List</option>
-                    </select>
-                </span>
-            </p>
-
-            <div data-ns="css.minify.import.filter"<?php $visible('css.minify.import.filter', ($get('css.minify.import.filter.type') === 'include')); ?> data-ns-condition="css.minify.import.filter.type==include">
-                <h5 class="h">&nbsp;@import Include List</h5>
-                <textarea class="json-array-lines" name="o10n[css.minify.import.filter.include]" data-json-type="json-array-lines" placeholder="Exclude stylesheet imports by default. Import stylesheets on this list."><?php $line_array('css.minify.import.filter.include'); ?></textarea>
-                <p class="description">Enter (parts of) <code>@import</code> URI's to process, e.g. <code>bootstrap.min.css</code>. One match string per line.</p>
-            </div>
-            <div data-ns="css.minify.import.filter"<?php $visible('css.minify.import.filter', ($get('css.minify.import.filter.type') === 'exclude')); ?> data-ns-condition="css.minify.import.filter.type==exclude">
-                <h5 class="h">&nbsp;@import Exclude List</h5>
-                <textarea class="json-array-lines" name="o10n[css.minify.import.filter.exclude]" data-json-type="json-array-lines" placeholder="Import stylesheets by default. Exclude stylesheets on this list."><?php $line_array('css.minify.import.filter.exclude'); ?></textarea>
-                <p class="description">Enter (parts of) <code>@import</code> URI's to exclude from processing, e.g. <code>bootstrap.min.css</code>. One match string per line.</p>
-            </div>
         </td>
     </tr>
 </table>
@@ -97,8 +69,8 @@ $x = $get('css.minify.filter.enabled');
                   PHP CssMin Options
                 </th>
                 <th>
-                    <p class="poweredby">Powered by <a href="https://github.com/natxet/CssMin" target="_blank">CssMin</a><span class="google-code"><a href="https://code.google.com/archive/p/cssmin/" target="_blank"><img src="<?php print trailingslashit(O10N_CORE_URI); ?>admin/images/google-code-18h.png" width="25" height="18" border="0" alt="Google Code" title="View on Google Code" /></a></span><span class="star">
-                    <a class="github-button" data-manual="1" href="https://github.com/natxet/CssMin" data-icon="octicon-star" data-show-count="true" aria-label="Star natxet/CssMin on GitHub">Star</a></span>
+                    <p class="poweredby">Powered by <a href="https://github.com/JoeScylla/cssmin" target="_blank">CssMin</a><span class="google-code"><a href="https://code.google.com/archive/p/cssmin/" target="_blank"><img src="<?php print trailingslashit(O10N_CORE_URI); ?>admin/images/google-code-18h.png" width="25" height="18" border="0" alt="Google Code" title="View on Google Code" /></a></span><span class="star">
+                    <a class="github-button" data-manual="1" href="https://github.com/JoeScylla/cssmin" data-icon="octicon-star" data-show-count="true" aria-label="Star JoeScylla/cssmin on GitHub">Star</a></span>
                     </p>
                 </th> 
             </tr>

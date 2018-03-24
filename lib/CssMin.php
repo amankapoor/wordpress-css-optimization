@@ -4,6 +4,9 @@ namespace O10n;
 /**
  * CssMin - A (simple) css minifier with benefits
  *
+ * Modified for WordPress CSS Optimization plugin
+ * @link https://github.com/o10n-x/wordpress-css-optimization/blob/master/lib/CssMin.php
+ *
  * --
  * Copyright (c) 2011 Joe Scylla <joe.scylla@gmail.com>
  *
@@ -677,7 +680,7 @@ class CssVariablesMinifierFilter extends aCssMinifierFilter
         foreach ($remove as $i) {
             $tokens[$i] = null;
         }
-        if (!($plugin = $this->minifier->getPlugin("CssVariablesMinifierPlugin"))) {
+        if (!($plugin = $this->minifier->getPlugin("O10n\\CssVariablesMinifierPlugin"))) {
             CssMin::triggerError(new CssError(__FILE__, __LINE__, __METHOD__ . ": The plugin <code>CssVariablesMinifierPlugin</code> was not found but is required for <code>" . __CLASS__ . "</code>"));
         } else {
             $plugin->setVariables($variables);
@@ -1861,6 +1864,10 @@ class CssMinifier
      * @var array
      */
     private $plugins = array();
+
+    private $active_filters = array();
+    private $active_plugins = array();
+
     /**
      * Minified source.
      *
@@ -1879,7 +1886,7 @@ class CssMinifier
      */
     public function __construct($source = null, array $filters = null, array $plugins = null)
     {
-        $filters = array_merge(array(
+        $this->active_filters = array_merge(array(
                                "ImportImports" => false,
                                "RemoveComments" => true,
                                "RemoveEmptyRulesets" => true,
@@ -1889,7 +1896,7 @@ class CssMinifier
                                "Variables" => true,
                                "RemoveLastDelarationSemiColon" => true
                                ), is_array($filters) ? $filters : array());
-        $plugins = array_merge(array(
+        $this->active_plugins = array_merge(array(
                                "Variables" => true,
                                "ConvertFontWeight" => false,
                                "ConvertHslColors" => false,
@@ -1899,8 +1906,10 @@ class CssMinifier
                                "CompressUnitValues" => false,
                                "CompressExpressionValues" => false
                                ), is_array($plugins) ? $plugins : array());
+
+
         // Filters
-        foreach ($filters as $name => $config) {
+        foreach ($this->active_filters as $name => $config) {
             if ($config !== false) {
                 $class = "Css" . $name . "MinifierFilter";
                 $config = is_array($config) ? $config : array();
@@ -1913,7 +1922,7 @@ class CssMinifier
             }
         }
         // Plugins
-        foreach ($plugins as $name => $config) {
+        foreach ($this->active_plugins as $name => $config) {
             if ($config !== false) {
                 $class = "Css" . $name . "MinifierPlugin";
                 $config = is_array($config) ? $config : array();
@@ -2023,6 +2032,22 @@ class CssMinifier
         $this->minified = $r;
 
         return $r;
+    }
+
+    /**
+     * Return active plugins
+     */
+    public function active_plugins()
+    {
+        return $this->active_plugins;
+    }
+
+    /**
+     * Return active filters
+     */
+    public function active_filters()
+    {
+        return $this->active_filters;
     }
 }
 
@@ -2199,7 +2224,7 @@ class CssMin
     {
         self::$errors[] = $error;
         if (self::$isVerbose) {
-            trigger_error((string) $error, E_USER_WARNING);
+            throw Exception((string) $error, 'css');
         }
     }
 }
@@ -2210,12 +2235,12 @@ CssMin::initialise();
  * This {@link aCssMinifierFilter minifier filter} import external css files defined with the @import at-rule into the
  * current stylesheet.
  *
- * @package		CssMin/Minifier/Filters
- * @link		http://code.google.com/p/cssmin/
- * @author		Joe Scylla <joe.scylla@gmail.com>
- * @copyright	2008 - 2011 Joe Scylla <joe.scylla@gmail.com>
- * @license		http://opensource.org/licenses/mit-license.php MIT License
- * @version		3.0.1
+ * @package     CssMin/Minifier/Filters
+ * @link        http://code.google.com/p/cssmin/
+ * @author      Joe Scylla <joe.scylla@gmail.com>
+ * @copyright   2008 - 2011 Joe Scylla <joe.scylla@gmail.com>
+ * @license     http://opensource.org/licenses/mit-license.php MIT License
+ * @version     3.0.1
  */
 class CssImportImportsMinifierFilter extends aCssMinifierFilter
 {
@@ -2233,25 +2258,92 @@ class CssImportImportsMinifierFilter extends aCssMinifierFilter
      */
     public function apply(array &$tokens)
     {
-        if (!isset($this->configuration["BasePath"]) || !is_dir($this->configuration["BasePath"])) {
-            CssMin::triggerError(new CssError(__FILE__, __LINE__, __METHOD__ . ": Base path <code>" . (isset($this->configuration["BasePath"]) ? $this->configuration["BasePath"] : "null"). "</code> is not a directory"));
+        if (!isset($this->configuration["base_href"])) {
+            CssMin::triggerError(new CssError(__FILE__, __LINE__, __METHOD__ . ": No base href"));
 
             return 0;
         }
+
+        $base_href = $this->configuration["base_href"];
+        $filter = (isset($this->configuration["filter"]) && is_array($this->configuration["filter"]) && isset($this->configuration["filter"]['type'])) ? $this->configuration["filter"] : false;
+
         for ($i = 0, $l = count($tokens); $i < $l; $i++) {
             if (get_class($tokens[$i]) === "O10n\\CssAtImportToken") {
-                $import = $this->configuration["BasePath"] . "/" . $tokens[$i]->Import;
-                // Import file was not found/is not a file
-                if (!is_file($import)) {
-                    CssMin::triggerError(new CssError(__FILE__, __LINE__, __METHOD__ . ": Import file <code>" . $import. "</code> was not found.", (string) $tokens[$i]));
+                $url = $tokens[$i]->Import;
+
+                // apply filter
+                if ($filter) {
+                    if (!Core::get('tools')->filter_list_match($url, $filter['type'], $filter['list'])) {
+
+                        // do not import
+                        $tokens[$i] = null;
+                        continue 1;
+                    }
                 }
-                // Import file already imported; remove this @import at-rule to prevent recursions
-                elseif (in_array($import, $this->imported)) {
-                    CssMin::triggerError(new CssError(__FILE__, __LINE__, __METHOD__ . ": Import file <code>" . $import. "</code> was already imported.", (string) $tokens[$i]));
+
+                // rebase url
+                $url = Core::get('url')->rebase($url, $base_href);
+
+                if (in_array($url, $this->imported)) {
+
+                    // already imported
+                    $tokens[$i] = null;
+                    continue 1;
+                }
+
+                // detect local URL
+                $local = Core::get('url')->is_local($url);
+
+                if ($local) {
+                    $cssText = file_get_contents($local);
+                } else {
+
+                    // import external stylesheet
+                    if (!Core::get('url')->valid_protocol($url)) {
+                        $tokens[$i] = null;
+                        continue 1;
+                    }
+
+                    // download stylesheet
+                    try {
+                        $sheetData = Core::get('proxy')->proxify('css', $url, 'filedata');
+                    } catch (HTTPException $err) {
+                        $sheetData = false;
+                    }
+
+                    // failed to download file or file is empty
+                    if (!$sheetData) {
+                        $tokens[$i] = null;
+                        continue 1;
+                    }
+
+                    // css text
+                    $cssText = $sheetData[0];
+                }
+
+                $cssText = trim($cssText);
+                if ($cssText === '') {
+                    $this->imported[] = $url;
+                    // no CSS
                     $tokens[$i] = null;
                 } else {
-                    $this->imported[] = $import;
-                    $parser = new CssParser(file_get_contents($import));
+
+                    // apply pre-processing filters
+                    $cssText = Core::get('css')->css_filters($cssText, $url);
+
+                    $this->imported[] = $url;
+
+                    $filters = $this->minifier->active_filters();
+                    $plugins = $this->minifier->active_plugins();
+
+                    if ($filters && isset($filters['ImportImports']) && $filters['ImportImports']) {
+                        $filters['ImportImports']['base_href'] = $url;
+                    }
+
+                    // process stylesheet individually
+                    $minifier = new CssMinifier($cssText, $filters, $plugins);
+
+                    $parser = new CssParser($minifier->getMinified());
                     $import = $parser->getTokens();
                     // The @import at-rule has media types defined requiring special handling
                     if (count($tokens[$i]->MediaTypes) > 0 && !(count($tokens[$i]->MediaTypes) == 1 && $tokens[$i]->MediaTypes[0] == "all")) {
@@ -2372,6 +2464,7 @@ class CssImportImportsMinifierFilter extends aCssMinifierFilter
         }
     }
 }
+
 
 /**
  * {@link aCssParserPlugin Parser plugin} for preserve parsing expression() declaration values.
@@ -3624,12 +3717,12 @@ class CssCompressColorValuesMinifierPlugin extends aCssMinifierPlugin
 /**
  * This {@link aCssToken CSS token} represents a CSS comment.
  *
- * @package		CssMin/Tokens
- * @link		http://code.google.com/p/cssmin/
- * @author		Joe Scylla <joe.scylla@gmail.com>
- * @copyright	2008 - 2011 Joe Scylla <joe.scylla@gmail.com>
- * @license		http://opensource.org/licenses/mit-license.php MIT License
- * @version		3.0.1
+ * @package     CssMin/Tokens
+ * @link        http://code.google.com/p/cssmin/
+ * @author      Joe Scylla <joe.scylla@gmail.com>
+ * @copyright   2008 - 2011 Joe Scylla <joe.scylla@gmail.com>
+ * @license     http://opensource.org/licenses/mit-license.php MIT License
+ * @version     3.0.1
  */
 class CssCommentToken extends aCssToken
 {
@@ -3659,6 +3752,7 @@ class CssCommentToken extends aCssToken
         return $this->Comment;
     }
 }
+
 
 /**
  * {@link aCssParserPlugin Parser plugin} for parsing comments.

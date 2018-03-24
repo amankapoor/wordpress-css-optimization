@@ -99,8 +99,12 @@ class Css extends Controller implements Controller_Interface
         if ($this->options->bool(['css.minify','css.async','css.proxy'])) {
             if ($this->options->bool('css.minify')) {
                 $this->minify_filters = array(
-                    "ImportImports" => $this->options->bool('css.minify.cssmin.filters.ImportImports'),
+                    "ImportImports" => (($this->options->bool('css.minify.cssmin.filters.ImportImports.enabled')) ? array('base_href' => '') : false),
                     "RemoveComments" => (($this->options->bool('css.minify.cssmin.filters.RemoveComments.enabled')) ? array('whitelist' => $this->options->get('css.minify.cssmin.filters.RemoveComments.whitelist')) : false),
+
+                    // @todo create rebase filter for CssMin.php
+                    //"RebaseURLs" => $this->options->bool('css.minify.cssmin.filters.RebaseURLs'),
+
                     "RemoveEmptyRulesets" => $this->options->bool('css.minify.cssmin.filters.RemoveEmptyRulesets'),
                     "RemoveEmptyAtBlocks" => $this->options->bool('css.minify.cssmin.filters.RemoveEmptyAtBlocks'),
                     "ConvertLevel3Properties" => $this->options->bool('css.minify.cssmin.filters.ConvertLevel3Properties'),
@@ -108,6 +112,15 @@ class Css extends Controller implements Controller_Interface
                     "Variables" => $this->options->bool('css.minify.cssmin.filters.Variables'),
                     "RemoveLastDelarationSemiColon" => $this->options->bool('css.minify.cssmin.filters.RemoveLastDelarationSemiColon')
                 );
+                if ($this->minify_filters['ImportImports']) {
+                    if ($this->options->bool('css.minify.cssmin.filters.ImportImports.filter.enabled')) {
+                        $type = $this->options->get('css.minify.cssmin.filters.ImportImports.filter.type');
+                        $this->minify_filters['ImportImports']['filter'] = array(
+                            'type' => $type,
+                            'list' => $this->options->get('css.minify.cssmin.filters.ImportImports.filter.' . $type)
+                        );
+                    }
+                }
 
                 $this->minify_plugins = array(
                     "Variables" => $this->options->bool('css.minify.cssmin.plugins.Variables'),
@@ -121,7 +134,7 @@ class Css extends Controller implements Controller_Interface
                 );
             }
 
-            $this->rebase_uris = $this->options->bool('css.minify.rebase.enabled');
+            $this->rebase_uris = $this->options->bool('css.minify.cssmin.filters.RebaseURLs');
             $this->process_import = $this->options->bool('css.minify.import.enabled');
             if ($this->process_import && $this->options->bool('css.minify.import.filter.enabled')) {
                 $this->process_import_filterType = $this->options->get('css.minify.import.filter.type');
@@ -159,8 +172,11 @@ class Css extends Controller implements Controller_Interface
                 }
 
                 // async download position
-                $this->load_position = ($this->options->get('css.async.load_position') === 'timing') ? 'timing' : 'header';
-                if ($this->load_position === 'timing') {
+                $this->load_position = $this->options->get('css.async.load_position', 'header');
+                if ($this->load_position === 'footer') {
+                    // set load position
+                    $this->client->set_config('css', 'load_position', $this->client->config_index('key', 'footer'));
+                } elseif ($this->load_position === 'timing') {
 
                     // add timed exec module
                     $this->client->load_module('timed-exec');
@@ -278,6 +294,33 @@ class Css extends Controller implements Controller_Interface
                 }
             } else {
                 $this->http2_push = false;
+            }
+
+            // CSS Search & Replace config
+            $replace = $this->options->get('css.replace');
+            if (!$replace || empty($replace)) {
+                $this->replace = false;
+            } else {
+                $this->replace = array(
+                    'search' => array(),
+                    'replace' => array(),
+                    'search_regex' => array(),
+                    'replace_regex' => array()
+                );
+                
+                foreach ($replace as $object) {
+                    if (!isset($object['search']) || trim($object['search']) === '') {
+                        continue;
+                    }
+
+                    if (isset($object['regex']) && $object['regex']) {
+                        $this->replace['search_regex'][] = $object['search'];
+                        $this->replace['replace_regex'][] = $object['replace'];
+                    } else {
+                        $this->replace['search'][] = $object['search'];
+                        $this->replace['replace'][] = $object['replace'];
+                    }
+                }
             }
 
             // add filter for HTML output
@@ -739,11 +782,11 @@ class Css extends Controller implements Controller_Interface
                     if ($concat_group_minify) {
 
                         // target src cache dir of concatenated stylesheets for URL rebasing
-                        $target_src_dir = $this->file->directory_url('css/0/1/', 'cache', true);
+                        $base_href = $this->file->directory_url('css/0/1/', 'cache', true);
 
                         // create concatenated file using minifier
                         try {
-                            $minified = $this->minify($concat_sources, $target_src_dir);
+                            $minified = $this->minify($concat_sources, $base_href);
                         } catch (Exception $err) {
                             $minified = false;
                         }
@@ -1105,42 +1148,11 @@ class Css extends Controller implements Controller_Interface
      *
      * To enable different minification settings per page, any settings that modify the CSS before minification should be used in the hash.
      *
-     * @param  string $resource Resource
-     * @return string MD5 hash for resource
+     * @param  string $CSS CSS to filter
+     * @return string Modified CSS
      */
-    final public function css_filters($CSS)
+    final public function css_filters($CSS, $base_href)
     {
-
-        // initiate search & replace config
-        if ($this->replace === null) {
-
-            // CSS Search & Replace config
-            $replace = $this->options->get('css.replace');
-            if (!$replace || $replacempty($replace)) {
-                $this->replace = false;
-            } else {
-                $this->replace = array(
-                    'search' => array(),
-                    'replace' => array(),
-                    'search_regex' => array(),
-                    'replace_regex' => array()
-                );
-                
-                foreach ($replace as $object) {
-                    if (!isset($object['search']) || trim($object['search']) === '') {
-                        continue;
-                    }
-
-                    if (isset($object['regex']) && $object['regex']) {
-                        $this->replace['search_regex'][] = $object['search'];
-                        $this->replace['replace_regex'][] = $object['replace'];
-                    } else {
-                        $this->replace['search'][] = $object['search'];
-                        $this->replace['replace'][] = $object['replace'];
-                    }
-                }
-            }
-        }
 
         // apply search & replace filter
         if ($this->replace) {
@@ -1160,112 +1172,27 @@ class Css extends Controller implements Controller_Interface
             }
         }
 
-        return $CSS;
-    }
-
-    /**
-     * Process @import links
-     */
-    final public function process_import_links($CSS, $base_href)
-    {
-        if (!$this->process_import) {
-            return $CSS;
-        }
-
-        // remove comments to prevent importing commented our CSS
-        $nocomment_css = preg_replace('#/\*.*\*/#Us', '', $CSS);
-
-        // check if CSS contains imports
-        if (stripos($nocomment_css, '@import') !== false) {
-            if (preg_match_all('/(?:@import)\s(?:url\()?\s?["\'](.*?)["\']\s?\)?(?:[^;]*);?/mi', $nocomment_css, $matches)) {
-
-                // process import links
-                foreach ($matches[1] as $n => $import) {
-
-                    // sanitize url
-                    $url = trim(preg_replace('#^.*((?:https?:|ftp:)?//.*\.css).*$#', '$1', trim($import)), " \t\n\r\0\x0B\"'");
-
-                    // apply filter
-                    if ($this->process_import_filter !== false) {
-                        if (!$this->tools->filter_list_match($url, $this->process_import_filterType, $this->process_import_filter)) {
-                            continue 1;
+        // rebase relative links
+        if ($this->rebase_uris) {
+            // rebase relative links in CSS
+            if (strpos($CSS, 'url') !== false) {
+                if (preg_match_all('/url\s*\(\s*("|\')?\s*(?!data:)([^\)\s\'"]+)\s*("|\')?\s*\)/i', $CSS, $out)) {
+                    $s = $r = array();
+                    foreach ($out[2] as $n => $url) {
+                        $translated_url = $this->url->rebase($url, $base_href);
+                        if ($translated_url !== $url) {
+                            $s[] = $out[0][$n];
+                            $r[] = str_replace($url, $translated_url, $out[0][$n]);
+                            //$CSS = str_replace($out[0][$n], str_replace($url, $translated_url, $out[0][$n]), $CSS);
                         }
                     }
-
-                    // translate relative url
-                    $url = $this->url->rebase($url, $base_href);
-
-                    // detect local URL
-                    $local = $this->url->is_local($url);
-
-                    if ($local) {
-                        $cssText = file_get_contents($local);
-                    } else {
-
-                        // import external stylesheet
-                        if (!$this->url->valid_protocol($url)) {
-                            continue 1;
-                        }
-
-                        // download stylesheet
-                        try {
-                            $sheetData = $this->proxy->proxify('css', $url, 'filedata');
-                        } catch (HTTPException $err) {
-                            $sheetData = false;
-                        }
-
-                        // failed to download file or file is empty
-                        if (!$sheetData) {
-                            continue 1;
-                        }
-
-                        // css text
-                        $cssText = $sheetData[0];
-                    }
-
-                    // apply CSS filters before processing
-                    $cssText = $this->css_filters($cssText);
-
-                    // rebase relative links
-                    $cssText = $this->rebase_relative_links($cssText, $url);
-
-                    // process import links in imported sheet
-                    $cssText = $this->process_import_links($cssText, $url);
-
-                    // remove import rule from CSS
-                    $CSS = str_replace($matches[0][$n], $cssText, $CSS);
+                    $CSS = str_replace($s, $r, $CSS);
                 }
             }
         }
 
         return $CSS;
     }
-
-    /**
-     * Rebase relative links in CSS
-     */
-    final public function rebase_relative_links($CSS, $base_href)
-    {
-        if (!$this->rebase_uris) {
-            return $CSS;
-        }
-
-        // rebase relative links in CSS
-        if (strpos($CSS, 'url') !== false) {
-            if (preg_match_all('/url\s*\(\s*("|\')?\s*(?!data:)([^\)\s\'"]+)\s*("|\')?\s*\)/i', $CSS, $out)) {
-                foreach ($out[2] as $n => $url) {
-                    $translated_url = $this->url->rebase($url, $base_href);
-                    if ($translated_url !== $url) {
-                        $CSS = str_replace($out[0][$n], str_replace($url, $translated_url, $out[0][$n]), $CSS);
-                    }
-                }
-            }
-        }
-
-        return $CSS;
-    }
-
-    
 
     /**
      * Extract stylesheets from HTML
@@ -1307,10 +1234,7 @@ class Css extends Controller implements Controller_Interface
         // minify filter
         if ($minify && $this->options->bool('css.minify.filter')) {
             $minify_filterType = $this->options->get('css.minify.filter.type');
-            $minify_filter = $this->options->get('css.minify.filter.' . $minify_filterType);
-            if (empty($minify_filter)) {
-                $minify_filter = false;
-            }
+            $minify_filter = $this->options->get('css.minify.filter.' . $minify_filterType, array());
         } else {
             $minify_filter = false;
         }
@@ -1318,21 +1242,14 @@ class Css extends Controller implements Controller_Interface
         // async filter
         if ($async && $this->options->bool('css.async.filter')) {
             $this->async_filterType = $this->options->get('css.async.filter.type');
-            $this->async_filter = $this->options->get('css.async.filter.config');
-            if (empty($this->async_filter)) {
-                $this->async_filter = false;
-            } else {
-            }
+            $this->async_filter = $this->options->get('css.async.filter.config', array());
         } else {
             $this->async_filter = false;
         }
 
         // proxy filter
         if ($proxy) {
-            $proxy_filter = $this->options->get('css.proxy.include');
-            if (empty($proxy_filter)) {
-                $proxy_filter = false;
-            }
+            $proxy_filter = $this->options->get('css.proxy.include', array());
         } else {
             $proxy_filter = false;
         }
@@ -1452,7 +1369,7 @@ class Css extends Controller implements Controller_Interface
                 }
 
                 // apply stylesheet async filter
-                if ($async && $this->async_filter) {
+                if ($async && $this->async_filter !== false) {
 
                     // apply filter
                     $asyncConfig = $this->tools->filter_config_match($stylesheet, $this->async_filter, $this->async_filterType);
@@ -1497,11 +1414,17 @@ class Css extends Controller implements Controller_Interface
                             if (isset($asyncConfig['localStorage'])) {
                                 $sheet['localStorage'] = $asyncConfig['localStorage'];
                             }
+                        } elseif (!$asyncConfig['async']) {
+                            // include by default
+                            $sheet['async'] = false;
                         }
                     } elseif ($asyncConfig === true) {
 
                         // include by default
                         $sheet['async'] = true;
+                    } else {
+                        // include by default
+                        $sheet['async'] = false;
                     }
                 }
 
@@ -1748,29 +1671,14 @@ class Css extends Controller implements Controller_Interface
                 }
             }
 
-            // apply CSS filters before processing
-            $cssText = $this->css_filters($cssText);
-
-            // rebase relative links such as background-url and @import links
-            $cssText = $this->rebase_relative_links($cssText, $base_href);
-
-            // process import links
-            $cssText = $this->process_import_links($cssText, $base_href);
-
             // target src cache dir
-            $target_src_dir = $this->file->directory_url('css/src/' . $this->cache->hash_path($urlhash), 'cache', true);
+            //$target_src_dir = $this->file->directory_url('css/src/' . $this->cache->hash_path($urlhash), 'cache', true);
 
-            // CSS source
-            $sources = array();
-
-            $sheet['href'] = $this->extract_filename($sheet['href']);
-
-            $sources[$sheet['href']] = array(
-                'css' => $cssText
-            );
+            //$sheet['href'] = $this->extract_filename($sheet['href']);
 
             try {
-                $minified = $this->minify($sources, $target_src_dir);
+                $href = (isset($sheet['href'])) ? $sheet['href'] : (((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+                $minified = $this->minify(array(array('css' => $cssText)), $href);
             } catch (Exception $err) {
                 // @todo
                 // handle minify failure, prevent overload
@@ -1844,7 +1752,7 @@ class Css extends Controller implements Controller_Interface
     /**
      * Minify stylesheets
      */
-    final private function minify($sources, $target)
+    final private function minify($sources, $base_href)
     {
         $this->last_used_minifier = false;
 
@@ -1861,12 +1769,28 @@ class Css extends Controller implements Controller_Interface
             $CSS .= ' ' . $source['css'];
         }
 
+        // apply CSS filters, search/replace, rebase relative links
+        $CSS = $this->css_filters($CSS, $base_href);
+
+        $filters = $this->minify_filters;
+        if (isset($filters['ImportImports']) && $filters['ImportImports']) {
+            $filters['ImportImports']['base_href'] = $base_href;
+            if (!$base_href) {
+                exit;
+            }
+        }
+ 
         // minify
         try {
-            $minified = CssMin::minify($CSS, $this->minify_filters, $this->minify_plugins);
+            $minified = CssMin::minify($CSS, $filters, $this->minify_plugins);
         } catch (\Exception $err) {
             throw new Exception('PHP CssMin failed: ' . $err->getMessage(), 'css');
         }
+
+        if (CssMin::hasErrors()) {
+            throw new Exception('PHP CssMin failed: <ul><li>' . implode("</li><li>", CssMin::getErrors()) . '</li></ul>', 'css');
+        }
+
         if (!$minified && $minified !== '') {
             if (CssMin::hasErrors()) {
                 throw new Exception('PHP CssMin failed: <ul><li>' . implode("</li><li>", CssMin::getErrors()) . '</li></ul>', 'css');

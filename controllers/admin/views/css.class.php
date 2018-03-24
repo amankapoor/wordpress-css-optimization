@@ -148,11 +148,7 @@ class AdminViewCss extends AdminViewBase
                     $forminput->type_verify(array(
                         'css.minify.filter.enabled' => 'bool',
 
-                        'css.minify.rebase.enabled' => 'bool',
                         'css.replace' => 'json-array',
-
-                        'css.minify.import.enabled' => 'bool',
-                        'css.minify.import.filter.enabled' => 'bool',
 
                         'css.minify.concat.enabled' => 'bool',
                         'css.minify.concat.minify' => 'bool',
@@ -170,15 +166,6 @@ class AdminViewCss extends AdminViewBase
                             'css.minify.filter.type' => 'string',
                             'css.minify.filter.include' => 'newline_array',
                             'css.minify.filter.exclude' => 'newline_array'
-                        ));
-                    }
-
-                    // minify import filter
-                    if ($forminput->bool('css.minify.import.filter.enabled')) {
-                        $forminput->type_verify(array(
-                            'css.minify.import.filter.type' => 'string',
-                            'css.minify.import.filter.include' => 'newline_array',
-                            'css.minify.import.filter.exclude' => 'newline_array'
                         ));
                     }
 
@@ -216,8 +203,10 @@ class AdminViewCss extends AdminViewBase
 
                     // cssmin
                     $forminput->type_verify(array(
-                        'css.minify.cssmin.filters.ImportImports' => 'bool',
+                        'css.minify.cssmin.filters.ImportImports.enabled' => 'bool',
+                        'css.minify.cssmin.filters.ImportImports.filter.enabled' => 'bool',
                         'css.minify.cssmin.filters.RemoveComments.enabled' => 'bool',
+                        'css.minify.cssmin.filters.RebaseURLs' => 'bool',
                         'css.minify.cssmin.filters.RemoveEmptyRulesets' => 'bool',
                         'css.minify.cssmin.filters.RemoveEmptyAtBlocks' => 'bool',
                         'css.minify.cssmin.filters.ConvertLevel3Properties' => 'bool',
@@ -234,6 +223,13 @@ class AdminViewCss extends AdminViewBase
                         'css.minify.cssmin.plugins.CompressUnitValues' => 'bool',
                         'css.minify.cssmin.plugins.CompressExpressionValues' => 'bool'
                     ));
+                    if ($forminput->bool('css.minify.cssmin.filters.ImportImports.filter.enabled')) {
+                        $forminput->type_verify(array(
+                            'css.minify.cssmin.filters.ImportImports.filter.type' => 'string',
+                            'css.minify.cssmin.filters.ImportImports.filter.include' => 'newline_array',
+                            'css.minify.cssmin.filters.ImportImports.filter.exclude' => 'newline_array'
+                        ));
+                    }
                     if ($forminput->bool('css.minify.cssmin.filters.RemoveComments.enabled')) {
                         $forminput->type_verify(array(
                             'css.minify.cssmin.filters.RemoveComments.whitelist' => 'string'

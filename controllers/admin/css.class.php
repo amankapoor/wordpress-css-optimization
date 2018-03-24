@@ -221,32 +221,84 @@ class AdminCss extends ModuleAdminController implements Module_Admin_Controller_
     {
         $version = $this->core->modules('css')->version();
 
-        if (version_compare($version, '0.0.27', '<=')) {
+        if (version_compare($version, '0.0.41', '<=')) {
 
-            // convert critical css array to new format
-            $critical_css_files = $this->options->get('css.critical.files');
-            if ($critical_css_files && is_array($critical_css_files)) {
-                $updated = false;
-                foreach ($critical_css_files as $index => $config) {
-                    if (isset($config['filepath'])) {
-                        unset($critical_css_files[$index]['filepath']);
-                        $updated = true;
+            // get all options
+            $options = $this->options->get();
+
+            // updated options
+            $update = array();
+
+            // deleted options
+            $delete = array();
+
+            if (isset($options['css.minify.rebase.enabled'])) {
+                if ($options['css.minify.rebase.enabled']) {
+                    $update['css.minify.cssmin.filters.RebaseURLs'] = true;
+                }
+                $delete[] = 'css.minify.rebase.enabled';
+            }
+
+            if (isset($options['css.minify.import.enabled'])) {
+                if ($options['css.minify.import.enabled']) {
+                    $update['css.minify.cssmin.filters.ImportImports.enabled'] = true;
+                }
+                $delete[] = 'css.minify.import.enabled';
+
+                if (isset($options['css.minify.import.filter.enabled'])) {
+                    if ($options['css.minify.import.filter.enabled']) {
+                        $type = $this->options->get('css.minify.import.filter.type');
+                        $list = $this->options->get('css.minify.import.filter.' . $type);
+
+                        $update['css.minify.cssmin.filters.ImportImports.filter.enabled'] = true;
+                        $update['css.minify.cssmin.filters.ImportImports.filter.type'] = $type;
+                        $update['css.minify.cssmin.filters.ImportImports.filter.' . $type] = $list;
                     }
-                    if (isset($config['conditions']) && is_array($config['conditions'])) {
-                        foreach ($config['conditions'] as $cindex => $condition) {
-                            if (is_array($condition) && isset($condition[0]) && is_numeric($condition[0])) {
-                                $critical_css_files[$index]['conditions'][$cindex] = $condition[1];
-                                $updated = true;
+
+                    $delete[] = 'css.minify.import.filter.enabled';
+                    if (isset($options['css.minify.import.filter.type'])) {
+                        $delete[] = 'css.minify.import.filter.type';
+                        $delete[] = 'css.minify.import.filter.include';
+                        $delete[] = 'css.minify.import.filter.exclude';
+                    }
+                }
+            }
+
+            if (version_compare($version, '0.0.27', '<=')) {
+
+                // convert critical css array to new format
+                $critical_css_files = $this->options->get('css.critical.files');
+                if ($critical_css_files && is_array($critical_css_files)) {
+                    foreach ($critical_css_files as $index => $config) {
+                        if (isset($config['filepath'])) {
+                            unset($critical_css_files[$index]['filepath']);
+                            $updated = true;
+                        }
+                        if (isset($config['conditions']) && is_array($config['conditions'])) {
+                            foreach ($config['conditions'] as $cindex => $condition) {
+                                if (is_array($condition) && isset($condition[0]) && is_numeric($condition[0])) {
+                                    $critical_css_files[$index]['conditions'][$cindex] = $condition[1];
+                                    $updated = true;
+                                }
                             }
                         }
                     }
-                }
-                if ($updated) {
-                    try {
-                        $this->AdminOptions->save(array('css.critical.files' => $critical_css_files));
-                    } catch (Exception $err) {
+                    if ($updated) {
+                        $update['css.critical.files'] = $critical_css_files;
                     }
                 }
+            }
+
+            if (!empty($update)) {
+                try {
+                    $this->AdminOptions->save($update);
+                } catch (Exception $err) {
+                }
+            }
+
+            // delete options
+            if (!empty($delete)) {
+                $this->AdminOptions->delete($delete);
             }
         }
     }
