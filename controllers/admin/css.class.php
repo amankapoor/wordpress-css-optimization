@@ -221,7 +221,7 @@ class AdminCss extends ModuleAdminController implements Module_Admin_Controller_
     {
         $version = $this->core->modules('css')->version();
 
-        if (version_compare($version, '0.0.41', '<=')) {
+        if (version_compare($version, '0.0.42', '<=')) {
 
             // get all options
             $options = $this->options->get();
