@@ -5,7 +5,7 @@ Tags: css, critical css, async, minify, editor, concat, minifier, concatenation,
 Requires at least: 4.0
 Requires PHP: 5.4
 Tested up to: 4.9.4
-Stable tag: 0.0.44
+Stable tag: 0.0.45
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -49,6 +49,9 @@ Documentation is available on [Github](https://github.com/o10n-x/wordpress-css-o
 
 
 == Changelog ==
+
+= 0.0.45 =
+* Bugfix: editor theme not loading after `wp_add_inline_script` update.
 
 = 0.0.44 =
 * Bugfix: script-injected stylesheet proxy not disabled.

@@ -141,8 +141,8 @@ $this->form_start(__('CSS Delivery Optimization', 'o10n'), 'css');
 
             <div class="suboption" data-ns="css.async"<?php $visible('css.async'); ?>>
                 <h5 class="h">&nbsp;Timed Render</h5>
-                <label><input type="checkbox" name="o10n[css.async.render_timing.enabled]" data-json-ns="1" data-ns-change="fonts.fontface" value="1"<?php $checked('css.async.render_timing.enabled'); ?> /> Enabled</label>
-                <p class="description">When enabled, fonts are rendered asynchronously using a timing method.</p>
+                <label><input type="checkbox" name="o10n[css.async.render_timing.enabled]" data-json-ns="1" data-ns-change="css.async.render_timing" value="1"<?php $checked('css.async.render_timing.enabled'); ?> /> Enabled</label>
+                <p class="description">When enabled, stylesheets are rendered asynchronously using a timing method.</p>
 
                 <div class="suboption" data-ns="css.async.render_timing"<?php $visible('css.async.render_timing'); ?>>
                     
