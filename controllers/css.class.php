@@ -1788,7 +1788,7 @@ class Css extends Controller implements Controller_Interface
             throw new Exception('PHP CssMin failed: ' . $err->getMessage(), 'css');
         }
 
-        if (CssMin::hasErrors()) {
+        if (!$this->options->bool('css.minify.ignore_errors.enabled') && CssMin::hasErrors()) {
             throw new Exception('PHP CssMin failed: <ul><li>' . implode("</li><li>", CssMin::getErrors()) . '</li></ul>', 'css');
         }
 
