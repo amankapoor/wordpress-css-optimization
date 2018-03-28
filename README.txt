@@ -51,7 +51,7 @@ Documentation is available on [Github](https://github.com/o10n-x/wordpress-css-o
 == Changelog ==
 
 = 0.0.47 =
-* Core update (see changelog.txt)
+* Added: option to suppress CssMin.php CSS parser errors triggered by invalid CSS code. (@amber-tanaka)
 
 = 0.0.45 =
 * Bugfix: editor theme not loading after `wp_add_inline_script` update.
