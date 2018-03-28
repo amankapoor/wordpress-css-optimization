@@ -21,7 +21,7 @@ $this->form_start(__('CSS Optimization', 'optimization'), 'css');
 		<th scope="row">Minify</th>
 		<td>
 			<label><input type="checkbox" value="1" name="o10n[css.minify.enabled]" data-json-ns="1"<?php $checked('css.minify.enabled'); ?> /> Enabled</label>
-			<p class="description">Compress CSS using <a href="https://github.com/JoeScylla/cssmin" target="_blank">PHP CssMin</a>.</p>
+			<p class="description">Compress CSS using <a href="https://github.com/JoeScylla/cssmin" target="_blank">CssMin.php</a>.</p>
 <?php
 /*
 $x = $get('css.minify.filter.enabled');
@@ -31,6 +31,11 @@ $x = $get('css.minify.filter.enabled');
     print_r($x);
     */
 ?>
+            <p data-ns="css.minify"<?php $visible('css.minify'); ?>>
+                <label><input type="checkbox" value="1" name="o10n[css.minify.ignore_errors.enabled]" data-json-ns="1"<?php $checked('css.minify.ignore_errors.enabled'); ?> /> Ignore CssMin.php errors</label>
+                <p class="description">By default invalid CSS code will trigger a CSS parser error. This option enables to suppress errors.</p>
+                <p class="info_yellow" style="margin-bottom:1em;" data-ns="css.minify.ignore_errors"<?php $visible('css.minify.ignore_errors'); ?>><strong><span class="dashicons dashicons-lightbulb"></span></strong> It is advised to use the CSS editor's CSS Lint feature to repair invalid CSS code.</p>
+            </p>
             <p data-ns="css.minify"<?php $visible('css.minify'); ?>>
                 <label><input type="checkbox" value="1" name="o10n[css.minify.filter.enabled]" data-json-ns="1"<?php $checked('css.minify.filter.enabled'); ?> /> Enable filter</label>
                 <span data-ns="css.minify.filter"<?php $visible('css.minify.filter'); ?>>

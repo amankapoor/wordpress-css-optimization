@@ -146,6 +146,8 @@ class AdminViewCss extends AdminViewBase
                 // minify enabled
                 if ($forminput->bool('css.minify.enabled')) {
                     $forminput->type_verify(array(
+                        'css.minify.ignore_errors.enabled' => 'bool',
+                        
                         'css.minify.filter.enabled' => 'bool',
 
                         'css.replace' => 'json-array',
