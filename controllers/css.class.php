@@ -337,7 +337,7 @@ class Css extends Controller implements Controller_Interface
     final public function process_html($HTML)
     {
         // verify if empty
-        if ($HTML === '') {
+        if ($HTML === '' || !$this->env->is_optimization()) {
             return $HTML; // no HTML
         }
 
@@ -352,11 +352,12 @@ class Css extends Controller implements Controller_Interface
         // sheet urls
         $sheet_urls = array();
 
+        // client config
+        $async_sheets = array();
+
         // load async
         $async = $this->options->bool('css.async');
         if ($async) {
-            // client config
-            $async_sheets = array();
 
             // async load position
             $async_position = ($this->options->get('css.async.position') === 'footer') ? 'foot' : 'critical-css';
