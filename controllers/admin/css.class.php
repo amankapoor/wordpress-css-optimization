@@ -232,38 +232,6 @@ class AdminCss extends ModuleAdminController implements Module_Admin_Controller_
         // deleted options
         $delete = array();
 
-        if (isset($options['css.minify.rebase.enabled'])) {
-            if ($options['css.minify.rebase.enabled']) {
-                $update['css.minify.cssmin.filters.RebaseURLs'] = true;
-            }
-            $delete[] = 'css.minify.rebase.enabled';
-        }
-
-        if (isset($options['css.minify.import.enabled'])) {
-            if ($options['css.minify.import.enabled']) {
-                $update['css.minify.cssmin.filters.ImportImports.enabled'] = true;
-            }
-            $delete[] = 'css.minify.import.enabled';
-
-            if (isset($options['css.minify.import.filter.enabled'])) {
-                if ($options['css.minify.import.filter.enabled']) {
-                    $type = $this->options->get('css.minify.import.filter.type');
-                    $list = $this->options->get('css.minify.import.filter.' . $type);
-
-                    $update['css.minify.cssmin.filters.ImportImports.filter.enabled'] = true;
-                    $update['css.minify.cssmin.filters.ImportImports.filter.type'] = $type;
-                    $update['css.minify.cssmin.filters.ImportImports.filter.' . $type] = $list;
-                }
-
-                $delete[] = 'css.minify.import.filter.enabled';
-                if (isset($options['css.minify.import.filter.type'])) {
-                    $delete[] = 'css.minify.import.filter.type';
-                    $delete[] = 'css.minify.import.filter.include';
-                    $delete[] = 'css.minify.import.filter.exclude';
-                }
-            }
-        }
-
         if (version_compare($version, '0.0.27', '<=')) {
 
                 // convert critical css array to new format

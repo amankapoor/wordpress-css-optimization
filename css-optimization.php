@@ -12,7 +12,7 @@ namespace O10n;
  * @wordpress-plugin
  * Plugin Name:       CSS Optimization
  * Description:       Advanced CSS optimization toolkit. Critical CSS, minification, concatenation, async loading, advanced editor, CSS Lint, Clean CSS (professional), beautifier and more.
- * Version:           0.0.48
+ * Version:           0.0.49
  * Author:            Optimization.Team
  * Author URI:        https://optimization.team/
  * Text Domain:       o10n
@@ -29,8 +29,8 @@ if (defined('WP_INSTALLING') && WP_INSTALLING) {
 }
 
 // settings
-$module_version = '0.0.48';
-$minimum_core_version = '0.0.28';
+$module_version = '0.0.49';
+$minimum_core_version = '0.0.36';
 $plugin_path = dirname(__FILE__);
 
 // load the optimization module loader
@@ -51,7 +51,8 @@ new Module(
             'proxy',
             'tools',
             'css',
-            'criticalcss'
+            'criticalcss',
+            'cssminifytest'
         ),
         'admin' => array(
             'AdminCss',

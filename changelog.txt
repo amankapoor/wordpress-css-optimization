@@ -152,3 +152,6 @@ Added: minify critical CSS using [PHP CssMin](https://code.google.com/archive/p/
 = 0.0.1 =
 
 Beta release. Please provide feedback on [Github forum](https://github.com/o10n-x/wordpress-css-optimization/issues).
+
+
+* Added: Regular Expression [Compressor.php from Minify](https://github.com/mrclay/minify) (mrclay)

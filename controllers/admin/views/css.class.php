@@ -147,6 +147,11 @@ class AdminViewCss extends AdminViewBase
                 if ($forminput->bool('css.minify.enabled')) {
                     $forminput->type_verify(array(
                         'css.minify.ignore_errors.enabled' => 'bool',
+                        'css.minify.minifier' => 'string',
+
+                        'css.minify.rebase.enabled' => 'bool',
+                        'css.minify.import.enabled' => 'bool',
+                        'css.minify.import.filter.enabled' => 'bool',
                         
                         'css.minify.filter.enabled' => 'bool',
 
@@ -162,12 +167,77 @@ class AdminViewCss extends AdminViewBase
                         'css.minify.concat.inline.enabled' => 'bool',
                     ));
 
+                    // minifier
+                    $minifier = $forminput->get('css.minify.minifier');
+                    if ($minifier === 'cssmin') {
+
+                        // cssmin
+                        $forminput->type_verify(array(
+                            'css.minify.cssmin.filters.ImportImports.enabled' => 'bool',
+                            'css.minify.cssmin.filters.ImportImports.filter.enabled' => 'bool',
+                            'css.minify.cssmin.filters.RemoveComments.enabled' => 'bool',
+                            'css.minify.cssmin.filters.RebaseURLs' => 'bool',
+                            'css.minify.cssmin.filters.RemoveEmptyRulesets' => 'bool',
+                            'css.minify.cssmin.filters.RemoveEmptyAtBlocks' => 'bool',
+                            'css.minify.cssmin.filters.ConvertLevel3Properties' => 'bool',
+                            'css.minify.cssmin.filters.ConvertLevel3AtKeyframes' => 'bool',
+                            'css.minify.cssmin.filters.Variables' => 'bool',
+                            'css.minify.cssmin.filters.RemoveLastDelarationSemiColon' => 'bool',
+
+                            'css.minify.cssmin.plugins.Variables' => 'bool',
+                            'css.minify.cssmin.plugins.ConvertFontWeight' => 'bool',
+                            'css.minify.cssmin.plugins.ConvertHslColors' => 'bool',
+                            'css.minify.cssmin.plugins.ConvertRgbColors' => 'bool',
+                            'css.minify.cssmin.plugins.ConvertNamedColors' => 'bool',
+                            'css.minify.cssmin.plugins.CompressColorValues' => 'bool',
+                            'css.minify.cssmin.plugins.CompressUnitValues' => 'bool',
+                            'css.minify.cssmin.plugins.CompressExpressionValues' => 'bool'
+                        ));
+                        if ($forminput->bool('css.minify.cssmin.filters.ImportImports.filter.enabled')) {
+                            $forminput->type_verify(array(
+                                'css.minify.cssmin.filters.ImportImports.filter.type' => 'string',
+                                'css.minify.cssmin.filters.ImportImports.filter.include' => 'newline_array',
+                                'css.minify.cssmin.filters.ImportImports.filter.exclude' => 'newline_array'
+                            ));
+                        }
+                        if ($forminput->bool('css.minify.cssmin.filters.RemoveComments.enabled')) {
+                            $forminput->type_verify(array(
+                                'css.minify.cssmin.filters.RemoveComments.whitelist' => 'string'
+                            ));
+                        }
+                    } elseif ($minifier === 'yui') {
+                        $forminput->type_verify(array(
+                            'css.minify.yui.options.keepSourceMapComment' => 'bool',
+                            'css.minify.yui.options.removeImportantComments' => 'bool',
+                            'css.minify.yui.options.setLinebreakPosition.enabled' => 'bool',
+                            'css.minify.yui.options.setLinebreakPosition.position' => 'int-empty',
+                            'css.minify.yui.options.setMaxExecutionTime.enabled' => 'bool',
+                            'css.minify.yui.options.setMaxExecutionTime.value' => 'int-empty',
+                            'css.minify.yui.options.setMemoryLimit.enabled' => 'bool',
+                            'css.minify.yui.options.setMemoryLimit.value' => 'string',
+                            'css.minify.yui.options.setPcreBacktrackLimit.enabled' => 'bool',
+                            'css.minify.yui.options.setPcreBacktrackLimit.value' => 'int-empty',
+                            'css.minify.yui.options.setPcreRecursionLimit.enabled' => 'bool',
+                            'css.minify.yui.options.setPcreRecursionLimit.value' => 'int-empty'
+                        ));
+                    } elseif ($minifier === 'regex') {
+                    }
+
                     // minify filter
                     if ($forminput->bool('css.minify.filter.enabled')) {
                         $forminput->type_verify(array(
                             'css.minify.filter.type' => 'string',
                             'css.minify.filter.include' => 'newline_array',
                             'css.minify.filter.exclude' => 'newline_array'
+                        ));
+                    }
+
+                    // minify import filter
+                    if ($forminput->bool('css.minify.import.filter.enabled')) {
+                        $forminput->type_verify(array(
+                            'css.minify.import.filter.type' => 'string',
+                            'css.minify.import.filter.include' => 'newline_array',
+                            'css.minify.import.filter.exclude' => 'newline_array'
                         ));
                     }
 
@@ -201,41 +271,6 @@ class AdminViewCss extends AdminViewBase
                                 'css.minify.concat.inline.filter.exclude' => 'newline_array'
                             ));
                         }
-                    }
-
-                    // cssmin
-                    $forminput->type_verify(array(
-                        'css.minify.cssmin.filters.ImportImports.enabled' => 'bool',
-                        'css.minify.cssmin.filters.ImportImports.filter.enabled' => 'bool',
-                        'css.minify.cssmin.filters.RemoveComments.enabled' => 'bool',
-                        'css.minify.cssmin.filters.RebaseURLs' => 'bool',
-                        'css.minify.cssmin.filters.RemoveEmptyRulesets' => 'bool',
-                        'css.minify.cssmin.filters.RemoveEmptyAtBlocks' => 'bool',
-                        'css.minify.cssmin.filters.ConvertLevel3Properties' => 'bool',
-                        'css.minify.cssmin.filters.ConvertLevel3AtKeyframes' => 'bool',
-                        'css.minify.cssmin.filters.Variables' => 'bool',
-                        'css.minify.cssmin.filters.RemoveLastDelarationSemiColon' => 'bool',
-
-                        'css.minify.cssmin.plugins.Variables' => 'bool',
-                        'css.minify.cssmin.plugins.ConvertFontWeight' => 'bool',
-                        'css.minify.cssmin.plugins.ConvertHslColors' => 'bool',
-                        'css.minify.cssmin.plugins.ConvertRgbColors' => 'bool',
-                        'css.minify.cssmin.plugins.ConvertNamedColors' => 'bool',
-                        'css.minify.cssmin.plugins.CompressColorValues' => 'bool',
-                        'css.minify.cssmin.plugins.CompressUnitValues' => 'bool',
-                        'css.minify.cssmin.plugins.CompressExpressionValues' => 'bool'
-                    ));
-                    if ($forminput->bool('css.minify.cssmin.filters.ImportImports.filter.enabled')) {
-                        $forminput->type_verify(array(
-                            'css.minify.cssmin.filters.ImportImports.filter.type' => 'string',
-                            'css.minify.cssmin.filters.ImportImports.filter.include' => 'newline_array',
-                            'css.minify.cssmin.filters.ImportImports.filter.exclude' => 'newline_array'
-                        ));
-                    }
-                    if ($forminput->bool('css.minify.cssmin.filters.RemoveComments.enabled')) {
-                        $forminput->type_verify(array(
-                            'css.minify.cssmin.filters.RemoveComments.whitelist' => 'string'
-                        ));
                     }
 
                     // verify search & replace

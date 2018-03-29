@@ -22,6 +22,8 @@ class Css extends Controller implements Controller_Interface
     // automatically load dependencies
     private $client_module_dependencies = array();
 
+    private $minifier; // minifier
+
     private $replace = null; // replace in CSS
     private $stylesheet_cdn; // stylesheet CDN config
     private $http2_push; // HTTP/2 Server Push config
@@ -51,8 +53,12 @@ class Css extends Controller implements Controller_Interface
 
     private $debug_mode = false;
 
-    private $minify_filters = array();
-    private $minify_plugins = array();
+    // CssMin.php settings
+    private $cssmin_minify_filters = null;
+    private $cssmin_minify_plugins = null;
+
+    // YUI settings
+    private $YUI;
 
     /**
      * Load controller
@@ -97,44 +103,11 @@ class Css extends Controller implements Controller_Interface
 
         // optimize CSS?
         if ($this->options->bool(['css.minify','css.async','css.proxy'])) {
-            if ($this->options->bool('css.minify')) {
-                $this->minify_filters = array(
-                    "ImportImports" => (($this->options->bool('css.minify.cssmin.filters.ImportImports.enabled')) ? array('base_href' => '') : false),
-                    "RemoveComments" => (($this->options->bool('css.minify.cssmin.filters.RemoveComments.enabled')) ? array('whitelist' => $this->options->get('css.minify.cssmin.filters.RemoveComments.whitelist')) : false),
-
-                    // @todo create rebase filter for CssMin.php
-                    //"RebaseURLs" => $this->options->bool('css.minify.cssmin.filters.RebaseURLs'),
-
-                    "RemoveEmptyRulesets" => $this->options->bool('css.minify.cssmin.filters.RemoveEmptyRulesets'),
-                    "RemoveEmptyAtBlocks" => $this->options->bool('css.minify.cssmin.filters.RemoveEmptyAtBlocks'),
-                    "ConvertLevel3Properties" => $this->options->bool('css.minify.cssmin.filters.ConvertLevel3Properties'),
-                    "ConvertLevel3AtKeyframes" => $this->options->bool('css.minify.cssmin.filters.ConvertLevel3AtKeyframes'),
-                    "Variables" => $this->options->bool('css.minify.cssmin.filters.Variables'),
-                    "RemoveLastDelarationSemiColon" => $this->options->bool('css.minify.cssmin.filters.RemoveLastDelarationSemiColon')
-                );
-                if ($this->minify_filters['ImportImports']) {
-                    if ($this->options->bool('css.minify.cssmin.filters.ImportImports.filter.enabled')) {
-                        $type = $this->options->get('css.minify.cssmin.filters.ImportImports.filter.type');
-                        $this->minify_filters['ImportImports']['filter'] = array(
-                            'type' => $type,
-                            'list' => $this->options->get('css.minify.cssmin.filters.ImportImports.filter.' . $type)
-                        );
-                    }
-                }
-
-                $this->minify_plugins = array(
-                    "Variables" => $this->options->bool('css.minify.cssmin.plugins.Variables'),
-                    "ConvertFontWeight" => $this->options->bool('css.minify.cssmin.plugins.ConvertFontWeight'),
-                    "ConvertHslColors" => $this->options->bool('css.minify.cssmin.plugins.ConvertHslColors'),
-                    "ConvertRgbColors" => $this->options->bool('css.minify.cssmin.plugins.ConvertRgbColors'),
-                    "ConvertNamedColors" => $this->options->bool('css.minify.cssmin.plugins.ConvertNamedColors'),
-                    "CompressColorValues" => $this->options->bool('css.minify.cssmin.plugins.CompressColorValues'),
-                    "CompressUnitValues" => $this->options->bool('css.minify.cssmin.plugins.CompressUnitValues'),
-                    "CompressExpressionValues" => $this->options->bool('css.minify.cssmin.plugins.CompressExpressionValues')
-                );
+            if ($this->options->bool('css.minify.enabled')) {
+                $this->minifier = $this->options->get('css.minify.minifier', 'cssmin');
             }
 
-            $this->rebase_uris = $this->options->bool('css.minify.cssmin.filters.RebaseURLs');
+            $this->rebase_uris = $this->options->bool('css.minify.rebase.enabled');
             $this->process_import = $this->options->bool('css.minify.import.enabled');
             if ($this->process_import && $this->options->bool('css.minify.import.filter.enabled')) {
                 $this->process_import_filterType = $this->options->get('css.minify.import.filter.type');
@@ -777,6 +750,7 @@ class Css extends Controller implements Controller_Interface
 
                     // use minify?
                     $concat_group_minify = (isset($concat_group_settings[$concat_group]['minify'])) ? $concat_group_settings[$concat_group]['minify'] : $concat_minify;
+                    $concat_group_minifier = (isset($concat_group_settings[$concat_group]['minifier'])) ? $concat_group_settings[$concat_group]['minifier'] : $this->minifier;
                     $concat_group_key = (isset($concat_group_settings[$concat_group]['group']) && isset($concat_group_settings[$concat_group]['group']['key'])) ? $concat_group_settings[$concat_group]['group']['key'] : false;
 
                     // concatenate using minify
@@ -787,7 +761,7 @@ class Css extends Controller implements Controller_Interface
 
                         // create concatenated file using minifier
                         try {
-                            $minified = $this->minify($concat_sources, $base_href);
+                            $minified = $this->minify($concat_sources, $base_href, $concat_group_minifier);
                         } catch (Exception $err) {
                             $minified = false;
                         }
@@ -1175,6 +1149,7 @@ class Css extends Controller implements Controller_Interface
 
         // rebase relative links
         if ($this->rebase_uris) {
+
             // rebase relative links in CSS
             if (strpos($CSS, 'url') !== false) {
                 if (preg_match_all('/url\s*\(\s*("|\')?\s*(?!data:)([^\)\s\'"]+)\s*("|\')?\s*\)/i', $CSS, $out)) {
@@ -1188,6 +1163,77 @@ class Css extends Controller implements Controller_Interface
                         }
                     }
                     $CSS = str_replace($s, $r, $CSS);
+                }
+            }
+        }
+
+        // process @import links
+        if ($this->process_import) {
+            $CSS = $this->process_import_links($CSS, $base_href);
+        }
+
+        return $CSS;
+    }
+
+    /**
+     * Process @import links
+     */
+    final private function process_import_links($CSS, $base_href)
+    {
+        // remove comments to prevent importing commented our CSS
+        $nocomment_css = preg_replace('#/\*.*\*/#Us', '', $CSS);
+        
+        // check if CSS contains imports
+        if (stripos($nocomment_css, '@import') !== false) {
+            if (preg_match_all('/(?:@import)\s(?:url\()?\s?["\'](.*?)["\']\s?\)?(?:[^;]*);?/mi', $nocomment_css, $matches)) {
+
+                // process import links
+                foreach ($matches[1] as $n => $import) {
+                    // sanitize url
+                    $url = trim(preg_replace('#^.*((?:https?:|ftp:)?//.*\.css).*$#', '$1', trim($import)), " \t\n\r\0\x0B\"'");
+                    // apply filter
+                    if ($this->process_import_filter !== false) {
+                        if (!$this->tools->filter_list_match($url, $this->process_import_filterType, $this->process_import_filter)) {
+                            continue 1;
+                        }
+                    }
+
+                    // translate relative url
+                    $url = $this->url->rebase($url, $base_href);
+
+
+                    // detect local URL
+                    $local = $this->url->is_local($url);
+                    if ($local) {
+                        $cssText = file_get_contents($local);
+                    } else {
+
+                        // import external stylesheet
+                        if (!$this->url->valid_protocol($url)) {
+                            continue 1;
+                        }
+
+                        // download stylesheet
+                        try {
+                            $sheetData = $this->proxy->proxify('css', $url, 'filedata');
+                        } catch (HTTPException $err) {
+                            $sheetData = false;
+                        }
+
+                        // failed to download file or file is empty
+                        if (!$sheetData) {
+                            continue 1;
+                        }
+
+                        // css text
+                        $cssText = $sheetData[0];
+                    }
+
+                    // apply CSS filters before processing
+                    $cssText = $this->css_filters($cssText, $url);
+
+                    // remove import rule from CSS
+                    $CSS = str_replace($matches[0][$n], $cssText, $CSS);
                 }
             }
         }
@@ -1414,6 +1460,11 @@ class Css extends Controller implements Controller_Interface
                             // custom localStorage
                             if (isset($asyncConfig['localStorage'])) {
                                 $sheet['localStorage'] = $asyncConfig['localStorage'];
+                            }
+
+                            // custom minifier
+                            if (isset($asyncConfig['minifier'])) {
+                                $sheet['minifier'] = $asyncConfig['minifier'];
                             }
                         } elseif (!$asyncConfig['async']) {
                             // include by default
@@ -1679,7 +1730,7 @@ class Css extends Controller implements Controller_Interface
 
             try {
                 $href = (isset($sheet['href'])) ? $sheet['href'] : (((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
-                $minified = $this->minify(array(array('css' => $cssText)), $href);
+                $minified = $this->minify(array(array('css' => $cssText)), $href, ((isset($sheet['minifier'])) ? $sheet['minifier'] : $this->minifier));
             } catch (Exception $err) {
                 // @todo
                 // handle minify failure, prevent overload
@@ -1753,16 +1804,9 @@ class Css extends Controller implements Controller_Interface
     /**
      * Minify stylesheets
      */
-    final private function minify($sources, $base_href)
+    final private function minify($sources, $base_href, $minifier)
     {
         $this->last_used_minifier = false;
-
-        // load PHP minifier
-        if (!class_exists('O10n\CssMin')) {
-            
-            // autoloader
-            require_once $this->core->modules('css')->dir_path() . 'lib/CssMin.php';
-        }
 
         // concat sources
         $CSS = '';
@@ -1773,34 +1817,149 @@ class Css extends Controller implements Controller_Interface
         // apply CSS filters, search/replace, rebase relative links
         $CSS = $this->css_filters($CSS, $base_href);
 
-        $filters = $this->minify_filters;
-        if (isset($filters['ImportImports']) && $filters['ImportImports']) {
-            $filters['ImportImports']['base_href'] = $base_href;
-            if (!$base_href) {
-                exit;
-            }
-        }
- 
-        // minify
-        try {
-            $minified = CssMin::minify($CSS, $filters, $this->minify_plugins);
-        } catch (\Exception $err) {
-            throw new Exception('PHP CssMin failed: ' . $err->getMessage(), 'css');
+        // minified CSS
+        $minified = '';
+
+        // select minifier
+        switch ($minifier) {
+            case "cssmin":
+
+                // setup css minifier settings
+                if (is_null($this->cssmin_minify_filters)) {
+                    $this->cssmin_minify_filters = array(
+                        "ImportImports" => (($this->options->bool('css.minify.cssmin.filters.ImportImports.enabled')) ? array('base_href' => '') : false),
+                        "RemoveComments" => (($this->options->bool('css.minify.cssmin.filters.RemoveComments.enabled')) ? array('whitelist' => $this->options->get('css.minify.cssmin.filters.RemoveComments.whitelist')) : false),
+
+                        // @todo create rebase filter for CssMin.php
+                        //"RebaseURLs" => $this->options->bool('css.minify.cssmin.filters.RebaseURLs'),
+
+                        "RemoveEmptyRulesets" => $this->options->bool('css.minify.cssmin.filters.RemoveEmptyRulesets'),
+                        "RemoveEmptyAtBlocks" => $this->options->bool('css.minify.cssmin.filters.RemoveEmptyAtBlocks'),
+                        "ConvertLevel3Properties" => $this->options->bool('css.minify.cssmin.filters.ConvertLevel3Properties'),
+                        "ConvertLevel3AtKeyframes" => $this->options->bool('css.minify.cssmin.filters.ConvertLevel3AtKeyframes'),
+                        "Variables" => $this->options->bool('css.minify.cssmin.filters.Variables'),
+                        "RemoveLastDelarationSemiColon" => $this->options->bool('css.minify.cssmin.filters.RemoveLastDelarationSemiColon')
+                    );
+                    if ($this->cssmin_minify_filters['ImportImports']) {
+                        if ($this->options->bool('css.minify.cssmin.filters.ImportImports.filter.enabled')) {
+                            $type = $this->options->get('css.minify.cssmin.filters.ImportImports.filter.type');
+                            $this->cssmin_minify_filters['ImportImports']['filter'] = array(
+                                'type' => $type,
+                                'list' => $this->options->get('css.minify.cssmin.filters.ImportImports.filter.' . $type)
+                            );
+                        }
+                    }
+
+                    $this->cssmin_minify_plugins = array(
+                        "Variables" => $this->options->bool('css.minify.cssmin.plugins.Variables'),
+                        "ConvertFontWeight" => $this->options->bool('css.minify.cssmin.plugins.ConvertFontWeight'),
+                        "ConvertHslColors" => $this->options->bool('css.minify.cssmin.plugins.ConvertHslColors'),
+                        "ConvertRgbColors" => $this->options->bool('css.minify.cssmin.plugins.ConvertRgbColors'),
+                        "ConvertNamedColors" => $this->options->bool('css.minify.cssmin.plugins.ConvertNamedColors'),
+                        "CompressColorValues" => $this->options->bool('css.minify.cssmin.plugins.CompressColorValues'),
+                        "CompressUnitValues" => $this->options->bool('css.minify.cssmin.plugins.CompressUnitValues'),
+                        "CompressExpressionValues" => $this->options->bool('css.minify.cssmin.plugins.CompressExpressionValues')
+                    );
+                }
+
+                // load library
+                if (!class_exists('O10n\CssMin')) {
+                    require_once $this->core->modules('css')->dir_path() . 'lib/CssMin.php';
+                }
+
+                $filters = $this->cssmin_minify_filters;
+                if (isset($filters['ImportImports']) && $filters['ImportImports']) {
+                    $filters['ImportImports']['base_href'] = $base_href;
+                    if (!$base_href) {
+                        exit;
+                    }
+                }
+         
+                // minify
+                try {
+                    $minified = CssMin::minify($CSS, $filters, $this->cssmin_minify_plugins);
+                } catch (\Exception $err) {
+                    throw new Exception('PHP CssMin failed: ' . $err->getMessage(), 'css');
+                }
+
+                if (!$this->options->bool('css.minify.ignore_errors.enabled') && CssMin::hasErrors()) {
+                    throw new Exception('PHP CssMin failed: <ul><li>' . implode("</li><li>", CssMin::getErrors()) . '</li></ul>', 'css');
+                }
+
+                if (!$minified && $minified !== '') {
+                    if (CssMin::hasErrors()) {
+                        throw new Exception('PHP CssMin failed: <ul><li>' . implode("</li><li>", CssMin::getErrors()) . '</li></ul>', 'css');
+                    } else {
+                        throw new Exception('PHP CssMin failed: unknown error', 'css');
+                    }
+                }
+
+                $this->last_used_minifier = 'cssmin';
+            break;
+            case "yui":
+
+                // load library
+                if (!class_exists('tubalmartin\CssMin\Minifier')) {
+                    try {
+                        require_once $this->core->modules('css')->dir_path() . 'lib/YUI_Utils.php';
+                        require_once $this->core->modules('css')->dir_path() . 'lib/YUI_Colors.php';
+                        require_once $this->core->modules('css')->dir_path() . 'lib/YUI_Minifier.php';
+
+                        $this->YUI = new \tubalmartin\CssMin\Minifier;
+
+                        // set options
+                        if ($this->options->bool('css.minify.yui.options.keepSourceMapComment')) {
+                            $this->YUI->keepSourceMapComment(true);
+                        }
+
+                        if ($this->options->bool('css.minify.yui.options.removeImportantComments')) {
+                            $this->YUI->removeImportantComments(true);
+                        }
+
+                        if ($this->options->bool('css.minify.yui.options.setLinebreakPosition.enabled')) {
+                            $this->YUI->setLinebreakPosition($this->options->get('css.minify.yui.options.setLinebreakPosition.position'));
+                        }
+
+                        if ($this->options->bool('css.minify.yui.options.setMaxExecutionTime.enabled')) {
+                            $this->YUI->setMaxExecutionTime($this->options->get('css.minify.yui.options.setMaxExecutionTime.value'));
+                        }
+
+                        if ($this->options->bool('css.minify.yui.options.setMemoryLimit.enabled')) {
+                            $this->YUI->setMemoryLimit($this->options->get('css.minify.yui.options.setMemoryLimit.value'));
+                        }
+
+                        if ($this->options->bool('css.minify.yui.options.setPcreBacktrackLimit.enabled')) {
+                            $this->YUI->setPcreBacktrackLimit($this->options->get('css.minify.yui.options.setPcreBacktrackLimit.value'));
+                        }
+
+                        if ($this->options->bool('css.minify.yui.options.setPcreRecursionLimit.enabled')) {
+                            $this->YUI->setPcreRecursionLimit($this->options->get('css.minify.yui.options.setPcreRecursionLimit.value'));
+                        }
+                    } catch (\Exception $err) {
+                        throw new Exception('YUI CSS Compressor failed to load: ' . $err->getMessage(), 'css');
+                    }
+                }
+
+                // minify
+                try {
+                    $minified = $this->YUI->run($CSS);
+                } catch (\Exception $err) {
+                    throw new Exception('YUI CSS Compressor failed: ' . $err->getMessage(), 'css');
+                }
+
+                if (!$minified && $minified !== '') {
+                    throw new Exception('YUI CSS Compressor failed: unknown error', 'css');
+                }
+
+                $this->last_used_minifier = 'yui';
+            break;
+            case "regex":
+            default:
+
+                $this->last_used_minifier = 'regex';
+            break;
         }
 
-        if (!$this->options->bool('css.minify.ignore_errors.enabled') && CssMin::hasErrors()) {
-            throw new Exception('PHP CssMin failed: <ul><li>' . implode("</li><li>", CssMin::getErrors()) . '</li></ul>', 'css');
-        }
-
-        if (!$minified && $minified !== '') {
-            if (CssMin::hasErrors()) {
-                throw new Exception('PHP CssMin failed: <ul><li>' . implode("</li><li>", CssMin::getErrors()) . '</li></ul>', 'css');
-            } else {
-                throw new Exception('PHP CssMin failed: unknown error', 'css');
-            }
-        }
-
-        $this->last_used_minifier = 'php';
 
         return array('css' => $minified);
     }
