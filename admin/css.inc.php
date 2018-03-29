@@ -46,7 +46,6 @@ $this->form_start(__('CSS Optimization', 'optimization'), 'css');
             <div class="suboption" data-ns="css.minify"<?php $visible('css.minify', ($get('css.minify.minifier') === 'cssmin')); ?> data-ns-condition="css.minify.minifier==cssmin">
                 <label><input type="checkbox" value="1" name="o10n[css.minify.ignore_errors.enabled]" data-json-ns="1"<?php $checked('css.minify.ignore_errors.enabled'); ?> /> Ignore CssMin.php errors</label>
                 <p class="description">By default invalid CSS code will trigger a CSS parser error. This option enables to suppress errors.</p>
-                <p class="info_yellow" style="margin-bottom:1em;" data-ns="css.minify.ignore_errors"<?php $visible('css.minify.ignore_errors'); ?>><strong><span class="dashicons dashicons-lightbulb"></span></strong> It is advised to use the CSS editor's CSS Lint feature to repair invalid CSS code.</p>
             </div>
             
             <div class="suboption" data-ns="css.minify"<?php $visible('css.minify', ($get('css.minify.minifier') === 'yui' || $get('css.minify.minifier') === 'regex')); ?> data-ns-condition="css.minify.minifier==yui||css.minify.minifier==regex">
@@ -80,6 +79,8 @@ $this->form_start(__('CSS Optimization', 'optimization'), 'css');
                     </div>
                 </div>
             </div>
+
+            <p class="info_yellow suboption"><strong><span class="dashicons dashicons-lightbulb"></span></strong> Invalid CSS code may cause issues for minifiers. You can use the CSS editor's <a href="<?php print esc_url(add_query_arg(array( 'page' => 'o10n-css-editor' ), admin_url('themes.php'))); ?>#csslint">CSS Lint</a> feature to repair invalid CSS code.</p>
 
             <!--p class="suboption"><a href="" class="button button-large">Test Minifier Performance</a></p>
             <p class="description">Minify a concatenated version of your front page CSS and compare minify speed, compression size and CSS render performance for each minifier. This tool relies on <a href="https://developer.mozilla.org/en-US/docs/Web/API/Performance#Browser_compatibility" target="_blank">Performance API</a>.</p-->
