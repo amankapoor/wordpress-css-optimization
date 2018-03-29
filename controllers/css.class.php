@@ -57,8 +57,11 @@ class Css extends Controller implements Controller_Interface
     private $cssmin_minify_filters = null;
     private $cssmin_minify_plugins = null;
 
-    // YUI settings
+    // YUI instance
     private $YUI;
+
+    // Compressor.php instance
+    private $Compressor;
 
     /**
      * Load controller
@@ -1955,6 +1958,28 @@ class Css extends Controller implements Controller_Interface
             break;
             case "regex":
             default:
+
+                // load library
+                if (!class_exists('O10n\Minify_CSS_Compressor')) {
+                    try {
+                        require_once $this->core->modules('css')->dir_path() . 'lib/Compressor.php';
+
+                        $this->Compressor = new Minify_CSS_Compressor(null);
+                    } catch (\Exception $err) {
+                        throw new Exception('CSS Compressor.php failed to load: ' . $err->getMessage(), 'css');
+                    }
+                }
+
+                // minify
+                try {
+                    $minified = $this->Compressor->process($CSS);
+                } catch (\Exception $err) {
+                    throw new Exception('CSS Compressor.php failed: ' . $err->getMessage(), 'css');
+                }
+
+                if (!$minified && $minified !== '') {
+                    throw new Exception('CSS Compressor.php failed: unknown error', 'css');
+                }
 
                 $this->last_used_minifier = 'regex';
             break;

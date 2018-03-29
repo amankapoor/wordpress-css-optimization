@@ -37,7 +37,7 @@ $this->form_start(__('CSS Optimization', 'optimization'), 'css');
                 <select name="o10n[css.minify.minifier]" data-ns-change="css.minify" data-json-default="<?php print esc_attr(json_encode('cssmin')); ?>">
                     <option value="cssmin"<?php $selected('css.minify.minifier', 'cssmin'); ?>>CssMin.php (Joe Scylla)</option>
                     <option value="yui"<?php $selected('css.minify.minifier', 'yui'); ?>>Yahoo YUI Compressor PHP Port v4.1.1</option>
-                    <!--option value="regex"<?php $selected('css.minify.minifier', 'regex'); ?>>Regular Expression Compressor.php from Minify (mrclay)</option-->
+                    <option value="regex"<?php $selected('css.minify.minifier', 'regex'); ?>>Regular Expression Compressor.php from Minify (mrclay)</option>
                 </select> 
                 <p class="description">Choose a minifier that provides the best performance for your CSS code.</p>
             </div>
@@ -49,7 +49,7 @@ $this->form_start(__('CSS Optimization', 'optimization'), 'css');
                 <p class="info_yellow" style="margin-bottom:1em;" data-ns="css.minify.ignore_errors"<?php $visible('css.minify.ignore_errors'); ?>><strong><span class="dashicons dashicons-lightbulb"></span></strong> It is advised to use the CSS editor's CSS Lint feature to repair invalid CSS code.</p>
             </div>
             
-            <div class="suboption" data-ns="css.minify"<?php $visible('css.minify', ($get('css.minify.minifier') === 'yui')); ?> data-ns-condition="css.minify.minifier==yui">
+            <div class="suboption" data-ns="css.minify"<?php $visible('css.minify', ($get('css.minify.minifier') === 'yui' || $get('css.minify.minifier') === 'regex')); ?> data-ns-condition="css.minify.minifier==yui||css.minify.minifier==regex">
 
                 <p class="poweredby" data-ns="css.minify.rebase"<?php $visible('css.minify.rebase'); ?>>Powered by <a href="https://github.com/pear/Net_URL2/" target="_blank">Net_URL2</a><span class="star">
                     <a class="github-button" data-manual="1" href="https://github.com/pear/Net_URL2" data-icon="octicon-star" data-show-count="true" aria-label="Star pear/Net_URL2 on GitHub">Star</a></span></p>
@@ -69,12 +69,12 @@ $this->form_start(__('CSS Optimization', 'optimization'), 'css');
                     </div>
 
                     <div style="margin-top:0.5em;" data-ns="css.minify.import.filter"<?php $visible('css.minify.import.filter', ($get('css.minify.import.filter.type') === 'include')); ?> data-ns-condition="css.minify.import.filter.type==include">
-                        <h5 class="h">&nbsp;Minify Include List</h5>
+                        <h5 class="h">&nbsp;Import Include List</h5>
                         <textarea class="json-array-lines" name="o10n[css.minify.import.filter.include]" data-json-type="json-array-lines" placeholder="Exclude stylesheets by default. Import stylesheets on this list."><?php $line_array('css.minify.import.filter.include'); ?></textarea>
                         <p class="description">Enter (parts of) stylesheet URLs to import, e.g. <code>bootstrap.min.css</code>. One match string per line.</p>
                     </div>
                     <div style="margin-top:0.5em;" data-ns="css.minify.import.filter"<?php $visible('css.minify.import.filter', ($get('css.minify.import.filter.type') === 'exclude')); ?> data-ns-condition="css.minify.import.filter.type==exclude">
-                        <h5 class="h">&nbsp;Minify Exclude List</h5>
+                        <h5 class="h">&nbsp;Import Exclude List</h5>
                         <textarea class="json-array-lines" name="o10n[css.minify.import.filter.exclude]" data-json-type="json-array-lines" placeholder="Import stylesheets by default. Exclude stylesheets on this list."><?php $line_array('css.minify.import.filter.exclude'); ?></textarea>
                         <p class="description">Enter (parts of) stylesheet URLs to exclude from import. One match string per line.</p>
                     </div>
