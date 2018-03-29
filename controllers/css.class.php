@@ -911,7 +911,7 @@ class Css extends Controller implements Controller_Interface
 
                         // add to position of last stylesheet in concatenated stylesheet
                         array_splice($sheet_urls, $async_insert_position, 0, array(array(
-                            'url' => $this->url_filter($this->cache->url('css', 'concat', $urlhash)),
+                            'url' => $sheet_url,
                             'media' => $media,
                             'rel_preload' => $rel_preload,
                             'noscript' => $noscript,
