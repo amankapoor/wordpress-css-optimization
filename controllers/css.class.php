@@ -279,7 +279,7 @@ class Css extends Controller implements Controller_Interface
             $this->http2_push_cdn = $this->options->bool('css.cdn.http2_push');
 
             // HTTP/2 Server Push enabled
-            if ($this->options->bool('css.http2_push')) {
+            if ($this->options->bool('css.http2_push.enabled') && $this->core->module_loaded('http2')) {
                 if (!$this->options->bool('css.http2_push.filter')) {
                     $this->http2_push = true;
                 } else {
@@ -882,6 +882,9 @@ class Css extends Controller implements Controller_Interface
 
                 // custom media
                 $media = (isset($concat_group_settings[$concat_group]['media'])) ? $concat_group_settings[$concat_group]['media'] : $media;
+                
+                // concat URL
+                $sheet_url = $this->url_filter($this->cache->url('css', 'concat', $urlhash));
 
                 // load async (concatenated stylesheet)
                 if ($async && $concat_group_async) {
@@ -920,9 +923,6 @@ class Css extends Controller implements Controller_Interface
                 } else {
                     // position in document
                     $position = ($load_position === 'footer') ? 'footer' : 'critical-css';
-
-                    // concat URL
-                    $sheet_url = $this->url_filter($this->cache->url('css', 'concat', $urlhash));
 
                     // include stylesheet link in HTML
                     $this->client->after($position, '<link rel="stylesheet" href="'.esc_url($sheet_url).'"'.(($media && $media !== 'all') ? ' media="'.esc_attr($media).'"' : '').'>');
@@ -1905,7 +1905,6 @@ class Css extends Controller implements Controller_Interface
      */
     final private function url_filter($url)
     {
-
         // apply HTTP/2 Server Push
         if ($this->http2_push) {
 
