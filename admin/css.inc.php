@@ -38,17 +38,35 @@ $this->form_start(__('CSS Optimization', 'optimization'), 'css');
                     <option value="cssmin"<?php $selected('css.minify.minifier', 'cssmin'); ?>>CssMin.php (Joe Scylla)</option>
                     <option value="yui"<?php $selected('css.minify.minifier', 'yui'); ?>>Yahoo YUI Compressor PHP Port v4.1.1</option>
                     <option value="regex"<?php $selected('css.minify.minifier', 'regex'); ?>>Regular Expression Compressor.php from Minify (mrclay)</option>
+                    <option value="custom"<?php $selected('css.minify.minifier', 'custom'); ?>>Custom minifier (WordPress filter hook)</option>
                 </select> 
                 <p class="description">Choose a minifier that provides the best performance for your CSS code.</p>
             </div>
 
+            <div class="suboption" data-ns="css.minify"<?php $visible('css.minify', ($get('css.minify.minifier') === 'custom')); ?> data-ns-condition="css.minify.minifier==custom">
+                <p style="font-size:16px;line-height:18px;">The Custom Minifier option enables to use any CSS minifier via the WordPress filter hook <code>o10n_css_custom_minify</code>. (<a href="javascript:void(0);" onclick="jQuery('#custom_minify_example').fadeToggle();">show example</a>)</p>
+            <div class="info_yellow" id="custom_minify_example" style="display:none;"><strong>Example:</strong> <pre class="clickselect" title="<?php print esc_attr('Click to select', 'optimization'); ?>" style="cursor:copy;padding: 10px;margin: 0 1px;margin-top:5px;font-size: 13px;">
+/* Custom CSS minifier */
+add_filter('o10n_css_custom_minify', function ($CSS, $base_href) {
+
+    // apply CSS optimization
+    exec('/node /path/to/optimize-css.js /tmp/css-source.css');
+    $minified = file_get_contents('/tmp/output.css');
+
+    // alternative
+    $minified = CSSCompressor::minify($CSS);
+
+    return $minified;
+
+});</pre></div>
+            </div>
 
             <div class="suboption" data-ns="css.minify"<?php $visible('css.minify', ($get('css.minify.minifier') === 'cssmin')); ?> data-ns-condition="css.minify.minifier==cssmin">
                 <label><input type="checkbox" value="1" name="o10n[css.minify.ignore_errors.enabled]" data-json-ns="1"<?php $checked('css.minify.ignore_errors.enabled'); ?> /> Ignore CssMin.php errors</label>
                 <p class="description">By default invalid CSS code will trigger a CSS parser error. This option enables to suppress errors.</p>
             </div>
             
-            <div class="suboption" data-ns="css.minify"<?php $visible('css.minify', ($get('css.minify.minifier') === 'yui' || $get('css.minify.minifier') === 'regex')); ?> data-ns-condition="css.minify.minifier==yui||css.minify.minifier==regex">
+            <div class="suboption" data-ns="css.minify"<?php $visible('css.minify', ($get('css.minify.minifier') === 'yui' || $get('css.minify.minifier') === 'regex' || $get('css.minify.minifier') === 'custom')); ?> data-ns-condition="css.minify.minifier==yui||css.minify.minifier==regex||css.minify.minifier==custom">
 
                 <p class="poweredby" data-ns="css.minify.rebase"<?php $visible('css.minify.rebase'); ?>>Powered by <a href="https://github.com/pear/Net_URL2/" target="_blank">Net_URL2</a><span class="star">
                     <a class="github-button" data-manual="1" href="https://github.com/pear/Net_URL2" data-icon="octicon-star" data-show-count="true" aria-label="Star pear/Net_URL2 on GitHub">Star</a></span></p>

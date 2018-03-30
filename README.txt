@@ -5,7 +5,7 @@ Tags: css, critical css, async, minify, editor, concat, minifier, concatenation,
 Requires at least: 4.0
 Requires PHP: 5.4
 Tested up to: 4.9.4
-Stable tag: 0.0.51
+Stable tag: 0.0.52
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -49,6 +49,13 @@ Documentation is available on [Github](https://github.com/o10n-x/wordpress-css-o
 
 
 == Changelog ==
+
+= 0.0.52 =
+* Bugfix: Minify based concat option not working.
+* Bugfix: Net_URL2 exceptions thrown inside namespace.
+* Added: Custom minifier option (support for Node.js, server software etc.)
+* Added: Option to disable minification for individual stylesheets in async config filter (`"minify": false`)
+* Added: Option to set minifier for individual stylesheets or concat groups in async config filter and concat group config.
 
 = 0.0.51 =
 * Added: Notice for CSS Lint code repair feature.

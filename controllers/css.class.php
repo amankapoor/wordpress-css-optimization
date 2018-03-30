@@ -58,10 +58,10 @@ class Css extends Controller implements Controller_Interface
     private $cssmin_minify_plugins = null;
 
     // YUI instance
-    private $YUI;
+    private $YUI = null;
 
     // Compressor.php instance
-    private $Compressor;
+    private $Compressor = null;
 
     /**
      * Load controller
@@ -491,6 +491,11 @@ class Css extends Controller implements Controller_Interface
                                             $concat_group_settings[$concat_group]['localStorage'] = $asyncConfig['localStorage'];
                                         }
                                     }
+                                    
+                                    // custom minifier
+                                    if (isset($asyncConfig['minifier'])) {
+                                        $concat_group_settings[$concat_group]['minifier'] = $asyncConfig['minifier'];
+                                    }
                                 } else {
 
                                     // do not load async
@@ -651,7 +656,7 @@ class Css extends Controller implements Controller_Interface
         if ($concat) {
 
             // use minify?
-            $concat_minify = $this->options->bool('css.concat.minify');
+            $concat_minify = $this->options->bool('css.minify.concat.minify');
 
             foreach ($concat_groups as $concat_group => $stylesheets) {
 
@@ -760,7 +765,7 @@ class Css extends Controller implements Controller_Interface
                     if ($concat_group_minify) {
 
                         // target src cache dir of concatenated stylesheets for URL rebasing
-                        $base_href = $this->file->directory_url('css/0/1/', 'cache', true);
+                        $base_href = $this->file->directory_url('css/0/1/', 'cache', false);
 
                         // create concatenated file using minifier
                         try {
@@ -774,35 +779,8 @@ class Css extends Controller implements Controller_Interface
 
                     if ($minified) {
 
-                        // apply filters
-                        $minified['css'] = $this->minified_css_filters($minified['css']);
-
-                        // header
-                        $minified['css'] .= "\n/* ";
-
-                        // group title
-                        if ($concat_group_settings) {
-                            if (isset($concat_group_settings[$concat_group]['title'])) {
-                                $minified['css'] .= $concat_group_settings[$concat_group]['title'] . "\n ";
-                            }
-                        }
-
-                        $minified['css'] .= "@concat";
-
-                        if ($concat_group_key) {
-                            $minified['css'] .= " " . $concat_group_key;
-                        }
-
-                        if ($this->last_used_minifier) {
-                            $minified['css'] .= " @min " . $this->last_used_minifier;
-                        }
-
-                        $minified['css'] .= " */";
-
                         // store cache file
                         $cache_file_path = $this->cache->put('css', 'concat', $urlhash, $minified['css'], $concat_group_key);
-
-                        //return $HTML = var_export(file_get_contents($cache_file_path), true);
 
                         // add link to source map
                         if (isset($minified['sourcemap'])) {
@@ -1221,6 +1199,8 @@ class Css extends Controller implements Controller_Interface
                             $sheetData = $this->proxy->proxify('css', $url, 'filedata');
                         } catch (HTTPException $err) {
                             $sheetData = false;
+                        } catch (Exception $err) {
+                            $sheetData = false;
                         }
 
                         // failed to download file or file is empty
@@ -1465,6 +1445,11 @@ class Css extends Controller implements Controller_Interface
                                 $sheet['localStorage'] = $asyncConfig['localStorage'];
                             }
 
+                            // custom minify
+                            if (isset($asyncConfig['minify'])) {
+                                $sheet['minify'] = $asyncConfig['minify'];
+                            }
+                            
                             // custom minifier
                             if (isset($asyncConfig['minifier'])) {
                                 $sheet['minifier'] = $asyncConfig['minifier'];
@@ -1608,11 +1593,6 @@ class Css extends Controller implements Controller_Interface
         // walk extracted CSS elements
         foreach ($this->css_elements as $n => $sheet) {
 
-            // minify disabled
-            if (!isset($sheet['minify']) || !$sheet['minify']) {
-                continue;
-            }
-
             // skip inline <style>
             if (isset($sheet['inline']) && $sheet['inline']) {
                 $url = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
@@ -1674,6 +1654,8 @@ class Css extends Controller implements Controller_Interface
                         $sheetData = $this->proxy->proxify('css', $sheet['href'], 'filedata');
                     } catch (HTTPException $err) {
                         $sheetData = false;
+                    } catch (Exception $err) {
+                        $sheetData = false;
                     }
 
                     // failed to download file or file is empty
@@ -1726,6 +1708,27 @@ class Css extends Controller implements Controller_Interface
                 }
             }
 
+            // minify disabled
+            if (!isset($sheet['minify']) || !$sheet['minify']) {
+
+                // entry
+                $this->css_elements[$n]['minified'] = $urlhash;
+
+                // store stylesheet
+                $cache_file_path = $this->cache->put(
+                    'css',
+                    'src',
+                    $urlhash,
+                    $cssText,
+                    false, // suffix
+                    false, // gzip
+                    false, // opcache
+                    $file_hash, // meta
+                    true // meta opcache
+                );
+                continue 1;
+            }
+
             // target src cache dir
             //$target_src_dir = $this->file->directory_url('css/src/' . $this->cache->hash_path($urlhash), 'cache', true);
 
@@ -1746,9 +1749,6 @@ class Css extends Controller implements Controller_Interface
 
             // minified CSS
             if ($minified) {
-
-                // apply filters
-                $minified['css'] = $this->minified_css_filters($minified['css']);
 
                 // footer
                 //$minified['css'] .= "\n/* @src ".$sheet['href']." */";
@@ -1809,7 +1809,7 @@ class Css extends Controller implements Controller_Interface
      */
     final private function minify($sources, $base_href, $minifier)
     {
-        $this->last_used_minifier = false;
+        $this->last_used_minifier = $minifier;
 
         // concat sources
         $CSS = '';
@@ -1897,7 +1897,6 @@ class Css extends Controller implements Controller_Interface
                     }
                 }
 
-                $this->last_used_minifier = 'cssmin';
             break;
             case "yui":
 
@@ -1907,39 +1906,40 @@ class Css extends Controller implements Controller_Interface
                         require_once $this->core->modules('css')->dir_path() . 'lib/YUI_Utils.php';
                         require_once $this->core->modules('css')->dir_path() . 'lib/YUI_Colors.php';
                         require_once $this->core->modules('css')->dir_path() . 'lib/YUI_Minifier.php';
-
-                        $this->YUI = new \tubalmartin\CssMin\Minifier;
-
-                        // set options
-                        if ($this->options->bool('css.minify.yui.options.keepSourceMapComment')) {
-                            $this->YUI->keepSourceMapComment(true);
-                        }
-
-                        if ($this->options->bool('css.minify.yui.options.removeImportantComments')) {
-                            $this->YUI->removeImportantComments(true);
-                        }
-
-                        if ($this->options->bool('css.minify.yui.options.setLinebreakPosition.enabled')) {
-                            $this->YUI->setLinebreakPosition($this->options->get('css.minify.yui.options.setLinebreakPosition.position'));
-                        }
-
-                        if ($this->options->bool('css.minify.yui.options.setMaxExecutionTime.enabled')) {
-                            $this->YUI->setMaxExecutionTime($this->options->get('css.minify.yui.options.setMaxExecutionTime.value'));
-                        }
-
-                        if ($this->options->bool('css.minify.yui.options.setMemoryLimit.enabled')) {
-                            $this->YUI->setMemoryLimit($this->options->get('css.minify.yui.options.setMemoryLimit.value'));
-                        }
-
-                        if ($this->options->bool('css.minify.yui.options.setPcreBacktrackLimit.enabled')) {
-                            $this->YUI->setPcreBacktrackLimit($this->options->get('css.minify.yui.options.setPcreBacktrackLimit.value'));
-                        }
-
-                        if ($this->options->bool('css.minify.yui.options.setPcreRecursionLimit.enabled')) {
-                            $this->YUI->setPcreRecursionLimit($this->options->get('css.minify.yui.options.setPcreRecursionLimit.value'));
-                        }
                     } catch (\Exception $err) {
                         throw new Exception('YUI CSS Compressor failed to load: ' . $err->getMessage(), 'css');
+                    }
+                }
+                if (is_null($this->YUI)) {
+                    $this->YUI = new \tubalmartin\CssMin\Minifier;
+
+                    // set options
+                    if ($this->options->bool('css.minify.yui.options.keepSourceMapComment')) {
+                        $this->YUI->keepSourceMapComment(true);
+                    }
+
+                    if ($this->options->bool('css.minify.yui.options.removeImportantComments')) {
+                        $this->YUI->removeImportantComments(true);
+                    }
+
+                    if ($this->options->bool('css.minify.yui.options.setLinebreakPosition.enabled')) {
+                        $this->YUI->setLinebreakPosition($this->options->get('css.minify.yui.options.setLinebreakPosition.position'));
+                    }
+
+                    if ($this->options->bool('css.minify.yui.options.setMaxExecutionTime.enabled')) {
+                        $this->YUI->setMaxExecutionTime($this->options->get('css.minify.yui.options.setMaxExecutionTime.value'));
+                    }
+
+                    if ($this->options->bool('css.minify.yui.options.setMemoryLimit.enabled')) {
+                        $this->YUI->setMemoryLimit($this->options->get('css.minify.yui.options.setMemoryLimit.value'));
+                    }
+
+                    if ($this->options->bool('css.minify.yui.options.setPcreBacktrackLimit.enabled')) {
+                        $this->YUI->setPcreBacktrackLimit($this->options->get('css.minify.yui.options.setPcreBacktrackLimit.value'));
+                    }
+
+                    if ($this->options->bool('css.minify.yui.options.setPcreRecursionLimit.enabled')) {
+                        $this->YUI->setPcreRecursionLimit($this->options->get('css.minify.yui.options.setPcreRecursionLimit.value'));
                     }
                 }
 
@@ -1954,7 +1954,20 @@ class Css extends Controller implements Controller_Interface
                     throw new Exception('YUI CSS Compressor failed: unknown error', 'css');
                 }
 
-                $this->last_used_minifier = 'yui';
+            break;
+            case "custom":
+
+                // minify
+                try {
+                    $minified = apply_filters('o10n_css_custom_minify', $CSS, $base_href);
+                } catch (\Exception $err) {
+                    throw new Exception('Custom CSS minifier failed: ' . $err->getMessage(), 'css');
+                }
+
+                if (!$minified && $minified !== '') {
+                    throw new Exception('Custom CSS minifier failed: unknown error', 'css');
+                }
+
             break;
             case "regex":
             default:
@@ -1963,11 +1976,12 @@ class Css extends Controller implements Controller_Interface
                 if (!class_exists('O10n\Minify_CSS_Compressor')) {
                     try {
                         require_once $this->core->modules('css')->dir_path() . 'lib/Compressor.php';
-
-                        $this->Compressor = new Minify_CSS_Compressor(null);
                     } catch (\Exception $err) {
                         throw new Exception('CSS Compressor.php failed to load: ' . $err->getMessage(), 'css');
                     }
+                }
+                if (is_null($this->Compressor)) {
+                    $this->Compressor = new Minify_CSS_Compressor(null);
                 }
 
                 // minify
@@ -1981,7 +1995,6 @@ class Css extends Controller implements Controller_Interface
                     throw new Exception('CSS Compressor.php failed: unknown error', 'css');
                 }
 
-                $this->last_used_minifier = 'regex';
             break;
         }
 
@@ -2117,22 +2130,6 @@ class Css extends Controller implements Controller_Interface
 
         // apply stylesheet CDN
         return $this->url->cdn($url, $this->stylesheet_cdn);
-    }
-
-    /**
-     * Apply filters to CSS before processing
-     *
-     * @param  string $CSS CSS to filter
-     * @return string Filtered CSS
-     */
-    final private function minified_css_filters($CSS)
-    {
-        // fix relative URLs
-        if (strpos($CSS, '../') !== false) {
-            $CSS = preg_replace('#\((\../)+wp-(includes|admin|content)/#', '('.$this->url->root_path().'wp-$2/', $CSS);
-        }
-
-        return $CSS;
     }
 
     /**
