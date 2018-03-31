@@ -108,7 +108,7 @@ class AdminCss extends ModuleAdminController implements Module_Admin_Controller_
         global $submenu;
 
         // WPO plugin or more than 1 optimization module, add to optimization menu
-        if (defined('O10N_WPO_VERSION') || count($this->core->modules()) > 1) {
+        if (count($this->core->modules()) > 1) {
             add_submenu_page('o10n', __('CSS Optimization', 'o10n'), __('CSS', 'o10n'), 'manage_options', 'o10n-css', array(
                  &$this->AdminView,
                  'display'

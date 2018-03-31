@@ -133,7 +133,7 @@ add_filter('o10n_css_custom_minify', function ($CSS, $base_href) {
     </tr>
 </table>
 
-<div class="advanced-options" data-ns="css.minify" data-json-advanced="css.minify.cssmin"<?php $visible('css.minify', ($get('css.minify.minifier') === 'cssmin')); ?> data-ns-condition="css.minify.minifier==cssmin">>
+<div class="advanced-options" data-ns="css.minify" data-json-advanced="css.minify.cssmin"<?php $visible('css.minify', ($get('css.minify.minifier') === 'cssmin')); ?> data-ns-condition="css.minify.minifier==cssmin">
 
     <table class="advanced-options-table widefat fixed striped">
         <colgroup><col style="width: 85px;"/><col style="width: 250px;"/><col /></colgroup>
@@ -176,7 +176,7 @@ submit_button(__('Save'), 'primary large', 'is_submit', false);
 </div>
 
 
-<div class="advanced-options" data-ns="css.minify" data-json-advanced="css.minify.yui"<?php $visible('css.minify', ($get('css.minify.minifier') === 'yui')); ?> data-ns-condition="css.minify.minifier==yui">>
+<div class="advanced-options" data-ns="css.minify" data-json-advanced="css.minify.yui"<?php $visible('css.minify', ($get('css.minify.minifier') === 'yui')); ?> data-ns-condition="css.minify.minifier==yui">
 
     <table class="advanced-options-table widefat fixed striped">
         <colgroup><col style="width: 85px;"/><col style="width: 250px;"/><col /></colgroup>
@@ -225,7 +225,7 @@ submit_button(__('Save'), 'primary large', 'is_submit', false);
                         <option value="exclude"<?php $selected('css.minify.concat.filter.type', 'exclude'); ?>>Exclude by default</option>
                     </select>
                 </span>
-                <p class="description">The group filter enables creating multiple concat groups that are shared more efficiently during page navigation.</p>
+                <p class="description">The group filter enables to create bundles of concatenated stylesheets. This enables to bundle stylesheets that are shared between pages while creating separate bundles for the remaining CSS on a page.</p>
             </div>
         </td>
     </tr>
