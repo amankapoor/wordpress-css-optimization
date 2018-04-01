@@ -210,16 +210,36 @@ class AdminViewCss extends AdminViewBase
                             'css.minify.yui.options.keepSourceMapComment' => 'bool',
                             'css.minify.yui.options.removeImportantComments' => 'bool',
                             'css.minify.yui.options.setLinebreakPosition.enabled' => 'bool',
-                            'css.minify.yui.options.setLinebreakPosition.position' => 'int-empty',
                             'css.minify.yui.options.setMaxExecutionTime.enabled' => 'bool',
-                            'css.minify.yui.options.setMaxExecutionTime.value' => 'int-empty',
                             'css.minify.yui.options.setMemoryLimit.enabled' => 'bool',
                             'css.minify.yui.options.setMemoryLimit.value' => 'string',
                             'css.minify.yui.options.setPcreBacktrackLimit.enabled' => 'bool',
-                            'css.minify.yui.options.setPcreBacktrackLimit.value' => 'int-empty',
-                            'css.minify.yui.options.setPcreRecursionLimit.enabled' => 'bool',
-                            'css.minify.yui.options.setPcreRecursionLimit.value' => 'int-empty'
+                            'css.minify.yui.options.setPcreRecursionLimit.enabled' => 'bool'
                         ));
+
+                        if ($forminput->bool('css.minify.yui.options.setLinebreakPosition.enabled')) {
+                            $forminput->type_verify(array(
+                                'css.minify.yui.options.setLinebreakPosition.position' => 'int-empty'
+                            ));
+                        }
+
+                        if ($forminput->bool('css.minify.yui.options.setMaxExecutionTime.enabled')) {
+                            $forminput->type_verify(array(
+                                'css.minify.yui.options.setMaxExecutionTime.value' => 'int-empty'
+                            ));
+                        }
+
+                        if ($forminput->bool('css.minify.yui.options.setPcreBacktrackLimit.enabled')) {
+                            $forminput->type_verify(array(
+                                'css.minify.yui.options.setPcreBacktrackLimit.value' => 'int-empty'
+                            ));
+                        }
+
+                        if ($forminput->bool('css.minify.yui.options.setPcreRecursionLimit.enabled')) {
+                            $forminput->type_verify(array(
+                                'css.minify.yui.options.setPcreRecursionLimit.value' => 'int-empty'
+                            ));
+                        }
                     } elseif ($minifier === 'regex') {
                     }
 
