@@ -14,7 +14,13 @@ This plugin can be installed and updated using [Github Updater](https://github.c
 
 ## WordPress WPO Collection
 
-This plugin is part of a Website Performance Optimization collection that include [Javascript](https://github.com/o10n-x/wordpress-javascript-optimization), [HTML](https://github.com/o10n-x/wordpress-html-optimization), [Web Font](https://github.com/o10n-x/wordpress-font-optimization), [HTTP/2](https://github.com/o10n-x/wordpress-http2-optimization), [Progressive Web App (Service Worker)](https://github.com/o10n-x/wordpress-pwa-optimization) and [Security Header](https://github.com/o10n-x/wordpress-security-header-optimization) optimization. The plugins are designed to work together with single plugin performance and are able to provide the absolute best website performance result. The plugins provide the latest optimization technologies and contain many unique innovations.
+This plugin is part of a Website Performance Optimization collection that include [Javascript](https://github.com/o10n-x/wordpress-javascript-optimization), [HTML](https://github.com/o10n-x/wordpress-html-optimization), [Web Font](https://github.com/o10n-x/wordpress-font-optimization), [HTTP/2](https://github.com/o10n-x/wordpress-http2-optimization), [Progressive Web App (Service Worker)](https://github.com/o10n-x/wordpress-pwa-optimization) and [Security Header](https://github.com/o10n-x/wordpress-security-header-optimization) optimization. 
+
+The WPO optimization plugins provide in all essential tools that enable to achieve perfect Google Lighthouse test scores, an important ranking factor for Google's latest Speed Update (June 2018).
+
+![Google Lighthouse Perfect Performance Scores](https://github.com/o10n-x/wordpress-css-optimization/blob/master/docs/images/google-lighthouse-pwa-validation.jpg)
+
+The plugins are designed to work together with single plugin performance and are able to provide the absolute best website performance result. The plugins provide the latest optimization technologies and contain many unique innovations.
 
 ### JSON shema based configuration
 
