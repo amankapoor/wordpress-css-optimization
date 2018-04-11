@@ -4,6 +4,34 @@
 
 Advanced CSS optimization toolkit. Critical CSS, minification, concatenation, async loading, advanced editor, CSS Lint, Clean CSS (professional), beautifier and more.
 
+**This plugin is removed from WordPress.org. Read the story [here](https://github.com/o10n-x/wordpress-css-optimization/issues/4).
+
+## Installation
+
+![Github Updater](https://github.com/afragen/github-updater/raw/develop/assets/GitHub_Updater_logo_small.png)
+
+This plugin can be installed and updated using [Github Updater](https://github.com/afragen/github-updater).
+
+## WordPress WPO Collection
+
+This plugin is part of a Website Performance Optimization collection that include [Javascript](https://github.com/o10n-x/wordpress-javascript-optimization), [HTML](https://github.com/o10n-x/wordpress-html-optimization), [Web Font](https://github.com/o10n-x/wordpress-font-optimization), [HTTP/2](https://github.com/o10n-x/wordpress-http2-optimization), [Progressive Web App (Service Worker)](https://github.com/o10n-x/wordpress-pwa-optimization), [Security Header](https://github.com/o10n-x/wordpress-security-header-optimization) optimization plugins. The plugins are designed to work together (single plugin performance) and are able to provide the absolute best website performance result. The plugins provide the latest optimization technologies and contain many unique innovations.
+
+## JSON shema based configuration
+
+The optimization plugins are based on a JSON schema based configuration concept that enables full control of the optimization using a simple JSON document. This provides several big advantages for website performance optimization.
+
+### Advantage 1: platform independent configuration and focus on optimization
+
+The WPO plugins are not like most other WordPress plugins. The plugins are purely focused on optimization technologies instead of controlling / modifying WordPress. This makes the the underlaying optimization technologies platform independent. The same technologies and configuration can be used on Magento, a Microsoft .NET CMS or a Node.js based CMS. 
+
+### Advantage 2: saving time
+
+The JSON configuration enables much quicker tuning for experts and it enables to quickly copy and paste a proven configuration to a new website.
+
+### Advantage 3: public optimization knowledge and help
+
+The JSON configuration can be easily shared and discussed on forums, enabling to build public knowledge about the best options. Because the optimization configuration is independent from WordPress, the knowledge will be valid for any platform which means that if the optimization plugin becomes a success on one platform, all other platforms will get access to public optimization resources and help.
+
 **This plugin is a beta release.**
 
 Documentation is available [here](https://github.com/o10n-x/wordpress-css-optimization/tree/master/docs).
