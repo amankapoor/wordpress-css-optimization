@@ -16,15 +16,15 @@ This plugin can be installed and updated using [Github Updater](https://github.c
 
 This plugin is part of a Website Performance Optimization collection that include [Javascript](https://github.com/o10n-x/wordpress-javascript-optimization), [HTML](https://github.com/o10n-x/wordpress-html-optimization), [Web Font](https://github.com/o10n-x/wordpress-font-optimization), [HTTP/2](https://github.com/o10n-x/wordpress-http2-optimization), [Progressive Web App (Service Worker)](https://github.com/o10n-x/wordpress-pwa-optimization) and [Security Header](https://github.com/o10n-x/wordpress-security-header-optimization) optimization. 
 
-The WPO optimization plugins provide in all essential tools that enable to achieve perfect [Google Lighthouse Test](https://developers.google.com/web/tools/lighthouse/) scores and to validate a website as [Google PWA](https://developers.google.com/web/progressive-web-apps/), an important ranking factor for Google's latest [Speed Update](https://searchengineland.com/google-speed-update-page-speed-will-become-ranking-factor-mobile-search-289904) (July 2018).
+The WPO optimization plugins provide in all essential tools that enable to achieve perfect [Google Lighthouse Test](https://developers.google.com/web/tools/lighthouse/) scores and to validate a website as [Google PWA](https://developers.google.com/web/progressive-web-apps/), an important ranking factor for Google's [Speed Update](https://searchengineland.com/google-speed-update-page-speed-will-become-ranking-factor-mobile-search-289904) (July 2018).
 
 ![Google Lighthouse Perfect Performance Scores](https://github.com/o10n-x/wordpress-css-optimization/blob/master/docs/images/google-lighthouse-pwa-validation.jpg)
 
 The WPO optimization plugins are designed to work together with single plugin performance. The plugins provide the latest optimization technologies and many unique innovations.
 
-### JSON shema based configuration
+### JSON shema configuration
 
-The WPO optimization plugins are based on a JSON schema based configuration concept that enables full control of the optimization using a simple JSON document. This provides several great advantages for website performance optimization.
+The WPO optimization plugins are based on JSON schema configuration that enables full control of the optimization using a simple JSON document. This provides several great advantages for website performance optimization.
 
 #### Advantage 1: platform independent
 
@@ -37,6 +37,12 @@ The JSON configuration enables much quicker tuning for experts and it enables to
 #### Advantage 3: public optimization knowledge and help
 
 The JSON configuration can be easily shared and discussed on forums, enabling to build public knowledge about the best options. Because the optimization configuration is independent from WordPress, the knowledge will be valid for any platform which increases the value of publicly shared optimization configuration, making it more likely to be able to receive free help.
+
+#### Advantage 4: a basis for AI automation
+
+The JSON configuration concept, when completed, enables fine grained tuning of the optimization, not just on a per page level but even per individual visitor or based on the environment. This will enabel to optimize the performance based on the [save-data](https://developers.google.com/web/updates/2016/02/save-data) header and for example chaging an individual Javascript optimization setting specifically for iPhone 5 devices. 
+
+While the JSON shema concept makes it easy for human editors to perform such complex environment based optimization, it also provides a basis for a future AI to take full control over the optimization, enabling to achieve the absolute best website performance result automatically.
 
 **This plugin is a beta release.**
 
