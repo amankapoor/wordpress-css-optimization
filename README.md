@@ -42,7 +42,7 @@ The JSON configuration can be easily shared and discussed on forums, enabling to
 
 The JSON configuration concept, when completed, enables fine grained tuning of the optimization, not just on a per page level but even per individual visitor or based on the environment. This will enable to optimize the performance based on the [save-data](https://developers.google.com/web/updates/2016/02/save-data) header or for example to change an individual CSS optimization setting specifically for iPhone 5 devices. 
 
-While the JSON shema concept makes it more easy for human editors to perform such complex environment based optimization, it also provides a basis for a future AI to take full control over the optimization, enabling to achieve the absolute best website performance result for each individual user and any situation, automatically.
+While the JSON shema concept makes it more easy for human editors to perform such complex environment based optimization, it also provides a basis for a future AI to take full control over the optimization, enabling to achieve the absolute best website performance result for each individual user and for any situation, automatically.
 
 **This plugin is a beta release.**
 
