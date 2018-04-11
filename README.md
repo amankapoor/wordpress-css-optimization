@@ -20,7 +20,7 @@ The WPO optimization plugins provide in all essential tools that enable to achie
 
 ![Google Lighthouse Perfect Performance Scores](https://github.com/o10n-x/wordpress-css-optimization/blob/master/docs/images/google-lighthouse-pwa-validation.jpg)
 
-The plugins are designed to work together with single plugin performance and are able to provide the absolute best website performance result. The plugins provide the latest optimization technologies and contain many unique innovations.
+The WPO optimization plugins are designed to work together with single plugin performance. The plugins provide the latest optimization technologies and many unique innovations.
 
 ### JSON shema based configuration
 
