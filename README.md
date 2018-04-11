@@ -38,7 +38,7 @@ The JSON configuration enables much quicker tuning for experts and it enables to
 
 The JSON configuration can be easily shared and discussed on forums, enabling to build public knowledge about the best options. Because the optimization configuration is independent from WordPress, the knowledge will be valid for any platform which increases the value of publicly shared optimization configuration, making it more likely to be able to receive free help.
 
-#### Advantage 4: a basis for AI automation
+#### Advantage 4: a basis for Artificial Intelligence
 
 The JSON configuration concept, when completed, enables fine grained tuning of the optimization, not just on a per page level but even per individual visitor or based on the environment. This will enabel to optimize the performance based on the [save-data](https://developers.google.com/web/updates/2016/02/save-data) header and for example chaging an individual Javascript optimization setting specifically for iPhone 5 devices. 
 
