@@ -16,9 +16,9 @@ This plugin can be installed and updated using [Github Updater](https://github.c
 
 This plugin is part of a Website Performance Optimization collection that include [Javascript](https://github.com/o10n-x/wordpress-javascript-optimization), [HTML](https://github.com/o10n-x/wordpress-html-optimization), [Web Font](https://github.com/o10n-x/wordpress-font-optimization), [HTTP/2](https://github.com/o10n-x/wordpress-http2-optimization), [Progressive Web App (Service Worker)](https://github.com/o10n-x/wordpress-pwa-optimization) and [Security Header](https://github.com/o10n-x/wordpress-security-header-optimization) optimization. The plugins are designed to work together with single plugin performance and are able to provide the absolute best website performance result. The plugins provide the latest optimization technologies and contain many unique innovations.
 
-## JSON shema based configuration
+### JSON shema based configuration
 
-The optimization plugins are based on a JSON schema based configuration concept that enables full control of the optimization using a simple JSON document. This provides several great advantages for website performance optimization.
+The WPO optimization plugins are based on a JSON schema based configuration concept that enables full control of the optimization using a simple JSON document. This provides several great advantages for website performance optimization.
 
 #### Advantage 1: platform independent
 
@@ -30,7 +30,7 @@ The JSON configuration enables much quicker tuning for experts and it enables to
 
 #### Advantage 3: public optimization knowledge and help
 
-The JSON configuration can be easily shared and discussed on forums, enabling to build public knowledge about the best options. Because the optimization configuration is independent from WordPress, the knowledge will be valid for any platform which means that if the optimization plugin becomes a success on one platform, all other platforms will get access to public optimization resources and help.
+The JSON configuration can be easily shared and discussed on forums, enabling to build public knowledge about the best options. Because the optimization configuration is independent from WordPress, the knowledge will be valid for any platform which increases the value of publicly shared optimization configuration, making it more likely to be able to receive free help.
 
 **This plugin is a beta release.**
 
