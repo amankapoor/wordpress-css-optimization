@@ -44,6 +44,8 @@ The JSON configuration concept, when completed, enables fine grained tuning of t
 
 While the JSON shema concept makes it more easy for human editors to perform such complex environment based optimization, it also provides a basis for a future AI to take full control over the optimization, enabling to achieve the absolute best website performance result for each individual user automatically.
 
+While the AI may one day supplement or take over, experts will have a clear view of what the AI is doing (it produces simple JSON that is used by humans) and will be able to override at any point.
+
 **This plugin is a beta release.**
 
 Documentation is available [here](https://github.com/o10n-x/wordpress-css-optimization/tree/master/docs).
