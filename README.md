@@ -36,7 +36,7 @@ The JSON configuration enables much quicker tuning for experts and it enables to
 
 #### Advantage 3: public optimization knowledge and help
 
-The JSON configuration can be easily shared and discussed on forums, enabling to build public knowledge about the best options. Because the optimization configuration is independent from WordPress, the knowledge will be valid for any platform which increases the value of publicly shared optimization configuration, making it more likely to be able to receive free help.
+The JSON configuration can be easily shared and discussed on forums, enabling to build public knowledge about the options. Because the optimization configuration is independent from WordPress, the knowledge will be valid for any platform which increases the value, making it more likely to be able to receive free help.
 
 #### Advantage 4: a basis for Artificial Intelligence
 
