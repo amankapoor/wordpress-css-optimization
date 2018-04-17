@@ -191,26 +191,27 @@ class AdminCss extends ModuleAdminController implements Module_Admin_Controller_
         // move CSS Editor to end of list
         $editor_item = false;
         $wp_editor_index = false;
-        foreach ($submenu['themes.php'] as $key => $item) {
-            if ($item[2] === 'theme-editor.php') {
-                $wp_editor_index = $key;
-            } elseif ($item[2] === 'o10n-css-editor') {
-                $editor_item = $item;
-                unset($submenu['themes.php'][$key]);
-            }
-        }
-
-        if ($wp_editor_index) {
-            $reordered = array();
+        if (isset($submenu['themes.php']) && is_array($submenu['themes.php'])) {
             foreach ($submenu['themes.php'] as $key => $item) {
-                $reordered[] = $item;
-                if ($key === $wp_editor_index) {
-                    $reordered[] = $editor_item;
+                if ($item[2] === 'theme-editor.php') {
+                    $wp_editor_index = $key;
+                } elseif ($item[2] === 'o10n-css-editor') {
+                    $editor_item = $item;
+                    unset($submenu['themes.php'][$key]);
                 }
             }
-            $submenu['themes.php'] = $reordered;
-        } else {
-            $submenu['themes.php'][] = $editor_item;
+            if ($wp_editor_index) {
+                $reordered = array();
+                foreach ($submenu['themes.php'] as $key => $item) {
+                    $reordered[] = $item;
+                    if ($key === $wp_editor_index) {
+                        $reordered[] = $editor_item;
+                    }
+                }
+                $submenu['themes.php'] = $reordered;
+            } else {
+                $submenu['themes.php'][] = $editor_item;
+            }
         }
     }
     
