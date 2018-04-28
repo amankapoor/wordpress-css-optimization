@@ -313,7 +313,7 @@ submit_button(__('Save'), 'primary large', 'is_submit', false);
         <th scope="row">Search &amp; Replace</th>
         <td>
             <div id="css-replace"><div class="loading-json-editor"><?php print __('Loading JSON editor...', 'optimization'); ?></div></div>
-            <input type="hidden" class="json" name="o10n[css.replace]" data-json-type="json-array" data-json-editor-compact="1" data-json-editor-init="1" value="<?php print esc_attr($json('css.replace')); ?>" />
+            <input type="hidden" class="json" name="o10n[css.replace]" data-json-type="json-array" data-json-editor-height="auto" data-json-editor-init="1" value="<?php print esc_attr($json('css.replace')); ?>" />
 
             <p class="description">This option enables to replace strings in the CSS <strong>before</strong> minification. Enter a JSON array with configuration objects <span class="dashicons dashicons-editor-help"></span>.</p>
 
