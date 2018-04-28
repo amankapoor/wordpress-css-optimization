@@ -25,21 +25,23 @@ $module_version = $view->module->version();
 			<h1><?php print $module_name; ?> <?php print $module_version; ?></h1>
 
 			<p class="about-text" style="min-height:inherit;">Thank you for using the <?php print $module_name; ?> plugin by <a href="https://optimization.team/" target="_blank" rel="noopener" style="color:black;text-decoration:none;">Optimization.Team</a></p>
-			
+
 			<p class="about-text" style="min-height:inherit;">This plugin is a toolkit for advanced CSS code and delivery optimization for WordPress.</p>
 
-			<p class="about-text info_yellow" style="min-height:inherit;"><strong>Warning:</strong> This plugin is intended for optimization professionals and advanced WordPress users.</p>
+			<p class="about-text info_white" style="min-height:inherit;border-color:#0073aa;background:#f1faff;"><strong><span class="dashicons dashicons-welcome-comments" style="line-height: 32px;font-size: 34px;width: inherit;color:#0073aa;"></span></strong> The optimization plugins have been removed from WordPress.org. Read the story <a href="https://github.com/o10n-x/wordpress-css-optimization/issues/4" target="_blank">here</a>.</p>
 
 			<p class="about-text" style="min-height:inherit;">Getting started? Read <a href="https://developers.google.com/speed/docs/insights/OptimizeCSSDelivery" target="_blank">this article</a> about CSS delivery optimization and <a href="https://developers.google.com/web/fundamentals/performance/critical-rendering-path/">this article</a> about Critical Rendering Path (above-the-fold) optimization by Google.</p>
 
-			<p class="about-text" style="min-height:inherit;">If you are happy with the plugin, please consider to <a href="https://wordpress.org/support/plugin/css-optimization/reviews/#new-post" target="_blank" rel="noopener">write a review</a> and <span class="star" style="display:inline-block;vertical-align:middle;"><a class="github-button" data-manual="1" data-size="large" href="https://github.com/o10n-x/wordpress-css-optimization" data-icon="octicon-star" data-show-count="true" aria-label="Star o10n-x/wordpress-css-optimization on GitHub">Star</a></span> on Github.</p>
+			<p class="about-text" style="min-height:inherit;">If you are happy with the plugin, please consider to <span class="star" style="display:inline-block;vertical-align:middle;"><a class="github-button" data-manual="1" data-size="large" href="https://github.com/o10n-x/wordpress-css-optimization" data-icon="octicon-star" data-show-count="true" aria-label="Star o10n-x/wordpress-css-optimization on GitHub">Star</a></span> on Github.</p>
 			
-
 			<hr />
 
 			<h3>WordPress WPO Collection</h3>
-			<p class="about-text">This plugin is part of a <a href="<?php print esc_url(add_query_arg(array('s' => 'o10n', 'tab' => 'search', 'type' => 'author'), admin_url('plugin-install.php'))); ?>">collection of optimization plugins</a> that can be used stand alone or as a selection of plugins with single plugin performance. The goal of the optimization plugins is to achieve the absolute best website performance possible.</p>
-			<p class="about-text">If you are interested in HTML, Javascript or Service Worker optimization, check out the <a href="<?php print esc_url(add_query_arg(array('s' => 'o10n', 'tab' => 'search', 'type' => 'author'), admin_url('plugin-install.php'))); ?>">other plugins</a> that are designed to cooperate with this plugin.</p>
+
+			<img src="<?php print O10N_CORE_URI; ?>admin/images/google-lighthouse.png" alt="Google Lighthouse" height="50" border="0">
+			
+			<p class="about-text" style="min-height:inherit;">This plugin is part of a <a href="https://github.com/o10n-x/" target="_blank">WPO plugin collection</a> that is designed to achieve perfect <a href="https://developers.google.com/web/tools/lighthouse/" target="_blank">Google Lighthouse</a> scores.</p>
+			
 
 		</div>
 	</div>
