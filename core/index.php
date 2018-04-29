@@ -1,1 +1,0 @@
-<?php // Web Performance Optimization
