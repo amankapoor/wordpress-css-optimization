@@ -66,6 +66,8 @@ For SEO it is therefor simple: websites will need to meet the standards set by t
 
 A perfect Google Lighthouse Score includes validation of a website as a [Progressive Web App (PWA)](https://developers.google.com/web/progressive-web-apps/).
 
+Google offers another new website performance test based on a AI neural network that is also much tougher than the Google PageSpeed score. It can be accessed on https://testmysite.thinkwithgoogle.com
+
 ## Description
 
 This plugin is a toolkit for professional CSS optimization.
