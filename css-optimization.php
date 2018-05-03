@@ -12,7 +12,7 @@ namespace O10n;
  * @wordpress-plugin
  * Plugin Name:       CSS Optimization
  * Description:       Advanced CSS optimization toolkit. Critical CSS, minification, concatenation, async loading, advanced editor, CSS Lint, Clean CSS (professional), beautifier and more.
- * Version:           0.0.61
+ * Version:           0.0.62
  * Author:            Optimization.Team
  * Author URI:        https://optimization.team/
  * GitHub Plugin URI: https://github.com/o10n-x/wordpress-css-optimization
@@ -30,7 +30,7 @@ if (defined('WP_INSTALLING') && WP_INSTALLING) {
 }
 
 // settings
-$module_version = '0.0.61';
+$module_version = '0.0.62';
 $minimum_core_version = '0.0.38';
 $plugin_path = dirname(__FILE__);
 
@@ -69,7 +69,7 @@ new Module(
             'path' => 'css/src/',
             'file_ext' => '.css',
             'alt_exts' => array('.css.map'),
-            'expire' => 259200 // expire after 3 days
+            'expire' => false // @todo 259200 // expire after 3 days
         ),
         'concat' => array(
             'hash_id' => true, // store data by database index id
@@ -77,12 +77,12 @@ new Module(
             'id_dir' => 'css/',
             'file_ext' => '.css',
             'alt_exts' => array('.css.map'),
-            'expire' => 86400 // expire after 1 day
+            'expire' => false // @todo 86400 // expire after 1 day
         ),
         'proxy' => array(
             'path' => 'css/proxy/',
             'file_ext' => '.css',
-            'expire' => 86400 // expire after 1 day
+            'expire' => false // @todo 86400 // expire after 1 day
         )
     ),
     __FILE__
