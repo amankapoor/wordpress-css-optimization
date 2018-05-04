@@ -20,7 +20,9 @@ CSS code optimization consists of two main parts: minification and concatenation
 
 ## CSS Minify
 
-The plugins provides the option to minify CSS code using [CSSMin](https://github.com/natxet/CssMin), a PHP based CSS compressor. You can control which stylesheets are included in the minification by enabling the filter option. 
+The plugins provides the option to minify CSS code using multiple CSS minifiers including [CSSMin](https://github.com/natxet/CssMin) and Yahoo's [YUI Compressor PHP Port](https://github.com/tubalmartin/YUI-CSS-compressor-PHP-port), PHP based CSS compressors, a fast regular expression based CSS minifier and the option to use a custom minifier using a WordPress filter that enables to use any solution, including a Amazon Lambda or Google Cloud function with Node.js based CSS optimization software. 
+
+You can control which stylesheets are included in the minification by enabling the filter option. 
 
 #### CSS Minify Filter
 
