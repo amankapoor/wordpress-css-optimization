@@ -37,7 +37,7 @@ The CSS minify options are documented on the Google Code Wiki page of CSSMin.
 * Filters: https://code.google.com/archive/p/cssmin/wikis/MinifierFilters.wiki
 * Plugins: https://code.google.com/archive/p/cssmin/wikis/MinifierPlugins.wiki
 
-#### Custom CSS minifier via WordPress filter
+#### Custom CSS minifier
 
 The Custom Minifier option enables to use any CSS minifier via the WordPress filter hook `o10n_css_custom_minify`.
 
