@@ -37,6 +37,26 @@ The CSS minify options are documented on the Google Code Wiki page of CSSMin.
 * Filters: https://code.google.com/archive/p/cssmin/wikis/MinifierFilters.wiki
 * Plugins: https://code.google.com/archive/p/cssmin/wikis/MinifierPlugins.wiki
 
+#### Custom CSS minifier via WordPress filter
+
+The Custom Minifier option enables to use any CSS minifier via the WordPress filter hook `o10n_css_custom_minify`.
+
+```php
+/* Custom CSS minifier */
+add_filter('o10n_css_custom_minify', function ($CSS, $base_href) {
+
+    // apply CSS optimization
+    exec('/node /path/to/optimize-css.js /tmp/css-source.css');
+    $minified = file_get_contents('/tmp/output.css');
+
+    // alternative
+    $minified = CSSCompressor::minify($CSS);
+
+    return $minified;
+
+});
+```
+
 ## CSS Concat
 
 The plugins provides advanced functionality to concatenate stylesheets. It includes the option to create concat groups, e.g. bundle the most used stylesheets while keeping individual page related stylesheets out of the concatenation, an option to merge Media Query based stylesheets and to concatenate inline stylesheets.
