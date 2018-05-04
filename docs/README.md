@@ -1,6 +1,6 @@
-# CSS Optimization Documentation
+# Documentation
  
-This documentation belongs to the WordPress plugin [CSS Optimization](https://wordpress.org/plugins/css-optimization/).
+Documentation for the WordPress plugin *CSS Optimization*.
 
 **The plugin is in beta. Please submit your feedback on the [Github forum](https://github.com/o10n-x/wordpress-css-optimization/issues).**
 
