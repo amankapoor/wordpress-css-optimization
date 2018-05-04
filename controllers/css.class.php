@@ -1680,6 +1680,10 @@ class Css extends Controller implements Controller_Interface
                 // add minified path
                 $this->css_elements[$n]['minified'] = $urlhash;
 
+                if (isset($sheet['inline']) && $sheet['inline']) {
+                    $this->css_elements[$n]['css'] = $this->cache->get('css', 'src', $urlhash);
+                }
+
                 continue 1;
             }
             
