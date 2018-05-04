@@ -4,6 +4,9 @@
 
 Advanced CSS optimization toolkit. Critical CSS, minification, concatenation, async loading, advanced editor, CSS Lint, Clean CSS (professional), beautifier and more.
 
+* [Documentation](https://github.com/o10n-x/wordpress-css-optimization)
+* [Description](https://github.com/o10n-x/wordpress-css-optimization#description)
+
 **This plugin is removed from WordPress.org. Read the story [here](https://github.com/o10n-x/wordpress-css-optimization/issues/4).**
 
 ## Installation
