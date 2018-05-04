@@ -30,13 +30,6 @@ When the filter is enabled you can choose the filter mode `Include List` or `Exc
 
 The filter list accepts parts of HTML stylesheet elements which makes it possible to match based on both CSS code and HTML attributes such as `id="stylesheet-id"`.
 
-#### CSS Minify Options
-
-The CSS minify options are documented on the Google Code Wiki page of CSSMin.
-
-* Filters: https://code.google.com/archive/p/cssmin/wikis/MinifierFilters.wiki
-* Plugins: https://code.google.com/archive/p/cssmin/wikis/MinifierPlugins.wiki
-
 #### Custom CSS minifier
 
 The Custom Minifier option enables to use any CSS minifier via the WordPress filter hook `o10n_css_custom_minify`.
