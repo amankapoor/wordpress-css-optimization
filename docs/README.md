@@ -52,9 +52,9 @@ add_filter('o10n_css_custom_minify', function ($CSS, $base_href) {
 
 ## CSS Concat
 
-The plugins provides advanced functionality to concatenate stylesheets. It includes the option to create concat groups, e.g. bundle the most used stylesheets while keeping individual page related stylesheets out of the concatenation, an option to merge Media Query based stylesheets and to concatenate inline stylesheets.
+The plugins provides advanced functionality to concatenate stylesheets. It includes the option to create concat groups that enables to bundle stylesheets, an option to merge Media Query based stylesheets and to extract and concatenate inline stylesheets.
 
-You can chose the option `Minify` to concatenate stylesheets using the CSSMin Minify configuration. By default stylesheets are simply bundled in their original format, which could be their minified version when using CSS minification.
+You can chose the option `Minify` to concatenate stylesheets using the CSS minifier. By default stylesheets are simply bundled in their original format, which could be their minified version when using CSS minification. Advanced CSS optimization software may be able to remove duplicate CSS in concatenated stylesheets using this option.
 
 #### Concat Group Filter
 
