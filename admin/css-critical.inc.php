@@ -300,7 +300,7 @@ $files_list = $view->critical_css_files();
         <th scope="row">HTTP/2 Server Push</th>
         <td><?php if (!$module_loaded('http2')) {
     ?>
-<p class="description">Install the <a href="<?php print esc_url(add_query_arg(array('s' => 'o10n', 'tab' => 'search', 'type' => 'author'), admin_url('plugin-install.php'))); ?>">HTTP/2 Optimization</a> plugin to use this feature.</p>
+<p class="description">Install the <a href="https://github.com/o10n-x/wordpress-http2-optimization" target="_blank">HTTP/2 Optimization</a> plugin to use this feature.</p>
 <?php
 } else {
         ?>

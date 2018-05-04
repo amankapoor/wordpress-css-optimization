@@ -27,6 +27,7 @@ class Css extends Controller implements Controller_Interface
     private $replace = null; // replace in CSS
     private $stylesheet_cdn; // stylesheet CDN config
     private $http2_push; // HTTP/2 Server Push config
+    private $sw_push; // Service Worker Push config
 
     private $diff_hash_prefix; // diff based hash prefix
     private $last_used_minifier; // last used minifier
@@ -270,6 +271,24 @@ class Css extends Controller implements Controller_Interface
                 }
             } else {
                 $this->http2_push = false;
+            }
+
+            // Service Worker Push enabled
+            if ($this->options->bool('css.sw_push.enabled') && $this->core->module_loaded('pwa')) {
+                if (!$this->options->bool('css.sw_push.filter')) {
+                    $this->sw_push = true;
+                } else {
+                    $filterType = $this->options->get('css.sw_push.filter.type');
+                    $filterConfig = ($filterType) ? $this->options->get('css.sw_push.filter.' . $filterType) : false;
+
+                    if (!$filterConfig) {
+                        $this->sw_push = false;
+                    } else {
+                        $this->sw_push = array($filterType, $filterConfig);
+                    }
+                }
+            } else {
+                $this->sw_push = false;
             }
 
             // CSS Search & Replace config
@@ -2106,6 +2125,11 @@ class Css extends Controller implements Controller_Interface
      */
     final private function url_filter($url)
     {
+        // apply Service Worker push
+        if ($this->sw_push) {
+            Core::get('pwa')->attach_preload($url);
+        }
+
         // apply HTTP/2 Server Push
         if ($this->http2_push) {
 
