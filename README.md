@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/o10n-x/wordpress-css-optimization.svg?branch=master)](https://travis-ci.org/o10n-x/wordpress-css-optimization)
+[![Build Status](https://travis-ci.org/o10n-x/wordpress-css-optimization.svg?branch=master)](https://travis-ci.org/o10n-x/wordpress-css-optimization) ![Version](https://img.shields.io/github/release/o10n-x/wordpress-css-optimization.svg)
 
 # WordPress CSS Optimization
 
