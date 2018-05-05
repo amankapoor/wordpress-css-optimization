@@ -440,9 +440,9 @@ class AdminViewCss extends AdminViewBase
                     // localStorage
                     if ($forminput->bool('css.async.localStorage.enabled')) {
                         $forminput->type_verify(array(
-                            'css.async.localStorage.max_size' => 'int',
-                            'css.async.localStorage.expire' => 'int',
-                            'css.async.localStorage.update_interval' => 'int',
+                            'css.async.localStorage.max_size' => 'int-empty',
+                            'css.async.localStorage.expire' => 'int-empty',
+                            'css.async.localStorage.update_interval' => 'int-empty',
                             'css.async.localStorage.head_update' => 'bool'
                         ));
                     }
