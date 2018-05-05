@@ -6,6 +6,7 @@ Advanced CSS optimization toolkit. Critical CSS, minification, concatenation, as
 
 * [Documentation](https://github.com/o10n-x/wordpress-css-optimization/tree/master/docs)
 * [Description](https://github.com/o10n-x/wordpress-css-optimization#description)
+* [JSON schemas](https://github.com/o10n-x/wordpress-o10n-core/tree/master/schemas)
 
 **This plugin is removed from WordPress.org. Read the story [here](https://github.com/o10n-x/wordpress-css-optimization/issues/4).**
 
