@@ -12,7 +12,9 @@ Additional features can be requested on the [Github forum](https://github.com/o1
 
 1. [CSS Code Optimization](#css-code-optimization)
 2. [CSS Delivery Optimization](#css-delivery-optimization)
-3. [Critical CSS / Above The Fold Optimization]()
+3. [Critical CSS / Above The Fold Optimization](#critical-css--above-the-fold-optimization)
+
+**Note:** *The full configuration of this plugin can be managed via JSON. The configuration is based on [JSON schemas](https://github.com/o10n-x/wordpress-o10n-core/tree/master/schemas).*
 
 # CSS Code Optimization
 
