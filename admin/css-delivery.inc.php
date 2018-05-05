@@ -265,7 +265,7 @@ submit_button(__('Save'), 'primary large', 'is_submit', false);
 } else {
         ?>
             <label><input type="checkbox" name="o10n[css.sw_push.enabled]" data-json-ns="1" value="1"<?php $checked('css.sw_push.enabled'); ?> /> Enabled</label>
-            <p class="description">When enabled, stylesheets are attached to a page using <code>O10n\attach_preload()</code> and are automatically preloaded when a page is preloaded in the Service Worker, achieving a similar result as HTTP/2 Server Push + Cache-Digest.</p>
+            <p class="description">When enabled, stylesheets are attached to a page using <code>\O10n\attach_preload()</code> and are automatically preloaded when a page is preloaded in the Service Worker, achieving a similar result as HTTP/2 Server Push + Cache-Digest.</p>
 
             <div data-ns="css.sw_push"<?php $visible('css.sw_push'); ?>>
                
