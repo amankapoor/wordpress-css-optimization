@@ -55,7 +55,7 @@ class AdminCss extends ModuleAdminController implements Module_Admin_Controller_
             )
         ),
         'settings' => array(
-            'title' => 'Settings'
+            'title' => 'JSON'
         )
     );
 
