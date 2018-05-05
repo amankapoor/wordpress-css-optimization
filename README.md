@@ -9,8 +9,6 @@ Advanced CSS optimization toolkit. Critical CSS, minification, concatenation, as
 
 **This plugin is removed from WordPress.org. Read the story [here](https://github.com/o10n-x/wordpress-css-optimization/issues/4).**
 
-**This plugin is a beta release.**
-
 ## Installation
 
 ![Github Updater](https://github.com/afragen/github-updater/raw/develop/assets/GitHub_Updater_logo_small.png)
