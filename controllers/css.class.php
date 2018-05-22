@@ -78,6 +78,7 @@ class Css extends Controller implements Controller_Interface
             'url',
             'env',
             'file',
+            'regex',
             'http',
             'cache',
             'client',
@@ -666,7 +667,7 @@ class Css extends Controller implements Controller_Interface
                 if (isset($sheet['replaceHref'])) {
 
                     // replace href in tag
-                    $this->output->add_search_replace($sheet['tag'], $this->href_regex($sheet['tag'], $sheet['href']));
+                    $this->output->add_search_replace($sheet['tag'], $this->regex->attr('href', $sheet['tag'], $sheet['href']));
                 }
             }
         }
@@ -1326,7 +1327,7 @@ class Css extends Controller implements Controller_Interface
                 }
 
                 // extract href using regular expression
-                $href = $this->href_regex($stylesheet);
+                $href = $this->regex->attr('href', $stylesheet);
                 if (!$href) {
                     continue 1;
                 }
@@ -2072,49 +2073,6 @@ class Css extends Controller implements Controller_Interface
         }
 
         return $basename;
-    }
-
-    /**
-     * Extract href from tag
-     *
-     * @param  string $tag     HTML tag
-     * @param  string $replace href value to replace
-     * @return string href or modified tag
-     */
-    final private function href_regex($tag, $replace = false)
-    {
-
-        // detect if tag has href
-        $hrefpos = strpos($tag, 'href');
-        if ($hrefpos !== false) {
-
-            // regex
-            $char = substr($tag, ($hrefpos + 5), 1);
-            if ($char === '"' || $char === '\'') {
-                $char = preg_quote($char);
-                $regex = '#(href\s*=\s*'.$char.')([^'.$char.']+)('.$char.')#Usmi';
-            } elseif ($char === ' ' || $char === "\n") {
-                $regex = '#(href\s*=\s*["|\'])([^"|\']+)(["|\'])#Usmi';
-            } else {
-                $regex = '#(href\s*=)([^\s]+)(\s)#Usmi';
-            }
-
-            // return href
-            if (!$replace) {
-
-                // match href
-                if (!preg_match($regex, $tag, $out)) {
-                    return false;
-                }
-
-                return ($out[2]) ? $this->url->translate_protocol($out[2]) : $out[2];
-            }
-
-            // replace href in tag
-            $tag = preg_replace($regex, '$1' . $replace . '$3', $tag);
-        }
-
-        return ($replace) ? $tag : false;
     }
 
     /**
