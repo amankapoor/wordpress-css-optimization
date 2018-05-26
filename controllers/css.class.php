@@ -1031,6 +1031,9 @@ class Css extends Controller implements Controller_Interface
 
                     $value_set = false;
                     for ($i = count($async_sheet); $i >= $index; $i--) {
+                        if (!isset($async_sheet[$i])) {
+                            continue;
+                        }
                         if ($async_sheet[$i] !== null) {
                             $value_set = true;
                         } else {
