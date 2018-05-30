@@ -96,7 +96,7 @@ class Css extends Controller implements Controller_Interface
     protected function setup()
     {
         // disabled
-        if (!$this->env->is_optimization()) {
+        if (!$this->env->enabled('css')) {
             return;
         }
 
@@ -333,7 +333,7 @@ class Css extends Controller implements Controller_Interface
     final public function process_html($HTML)
     {
         // verify if empty
-        if ($HTML === '' || !$this->env->is_optimization()) {
+        if ($HTML === '' || !$this->env->enabled('css')) {
             return $HTML; // no HTML
         }
 

@@ -42,7 +42,7 @@ class Cssminifytest extends Controller implements Controller_Interface
     protected function setup()
     {
         // disabled
-        if (!$this->env->is_optimization()) {
+        if (!$this->env->enabled('css')) {
             return;
         }
 
