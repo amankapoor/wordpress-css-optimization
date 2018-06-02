@@ -16,6 +16,7 @@ This plugin can be installed and updated using [Github Updater](https://github.c
 
 <details/>
   <summary>Installation instructions</summary>
+
 ### Step 1: Install Github Updater and first optimization plugin
 
 Installing and updating the plugins is possible using Github Updater. It is easy to install one of the plugins. You simply need to download the Github Updater plugin ([zip file](https://github.com/afragen/github-updater/archive/develop.zip)), install it from the WordPress plugin admin panel and copy the Github URL of the plugin into the Github Updater installer.
