@@ -35,7 +35,8 @@ class AdminViewCss extends AdminViewBase
             'AdminClient',
             'options',
             'AdminOptions',
-            'json'
+            'json',
+            'AdminCss'
         ));
     }
     
@@ -65,14 +66,7 @@ class AdminViewCss extends AdminViewBase
      */
     final public function help_tab()
     {
-        $data = array(
-            'name' => __('CSS Optimization', 'o10n'),
-            'github' => 'https://github.com/o10n-x/wordpress-css-optimization',
-            'wordpress' => 'https://wordpress.org/support/plugin/css-optimization',
-            'docs' => 'https://github.com/o10n-x/wordpress-css-optimization/tree/master/docs'
-        );
-
-        return $data;
+        return $this->AdminCss->help_tab();
     }
 
     /**
