@@ -51,12 +51,12 @@ The plugin enables to render and unrender stylesheets based on a Media Query or 
 
 ### Service Worker Push
 
-The plugin provides a unique innovation called **Service Worker Push**. It is a alternative for HTTP/2 Server Push + Cache-Digest with better performance and better efficiency.
+The plugin provides a unique innovation called **Service Worker Push**. It is an alternative for HTTP/2 Server Push + Cache-Digest with better performance and better efficiency.
 
 Cache-Digest is not yet an official supported feature. HTTP/2 Server Push without Cache-Digest causes a lot of overhead and has almost no performance advantage.
 
-https://calendar.perfplanet.com/2016/cache-digests-http2-server-push/
-https://jakearchibald.com/2017/h2-push-tougher-than-i-thought/
+- Performance study: https://calendar.perfplanet.com/2016/cache-digests-http2-server-push/
+- Google engineer: https://jakearchibald.com/2017/h2-push-tougher-than-i-thought/
 
 Cache-Digest calculation for thousands of assets causes overhead. Service Worker Push has direct access to the browser cache storage and is therefor able to support millions of cached assets without performance loss.
 
