@@ -65,6 +65,12 @@ add_filter('o10n_css_custom_minify', function ($CSS, $base_href) {
 ```
 </details>
 
+### Grouped Concatenation with Dependencies
+
+The plugin provides advanced concatenation with the ability to configure concat groups.
+
+![Group Concat](https://github.com/o10n-x/wordpress-css-optimization/blob/master/docs/images/concat-groups.png)
+
 ### Async loading and timed download and/or render
 
 The plugin provides many unique innovations including conditional Critical CSS, timed CSS loading and/or rendering based on `requestAnimationFrame` with frame target, `requestIdleCallback`, element scrolled into view or a Media Query.
@@ -123,6 +129,12 @@ Critical CSS can be conditionally applied using a JSON config system that uses W
 The plugin provides a unique innovation to capture and proxy external script injected stylesheets to pass the [Leverage browser caching](https://developers.google.com/speed/docs/insights/LeverageBrowserCaching) rule from Google PageSpeed Insights.
 
 ![Stylesheet Proxy](https://github.com/o10n-x/wordpress-css-optimization/blob/master/docs/images/proxy.png)
+
+### CSS Code Search & Replace
+
+The plugin provides an option to search and replace strings in CSS code before minification. The configuration supports both strings and regular expression.
+
+![CSS code search & replace](https://github.com/o10n-x/wordpress-css-optimization/blob/master/docs/images/css-code-replace.png)
 
 With debug modus enabled, the browser console will show detailed information about the CSS loading and rendering process including a [Performance API](https://developer.mozilla.org/nl/docs/Web/API/Performance) result for an insight in the CSS loading performance of any given configuration.
 
