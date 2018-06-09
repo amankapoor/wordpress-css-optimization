@@ -49,6 +49,43 @@ The plugin provides many unique innovations including conditional Critical CSS, 
 
 The plugin enables to render and unrender stylesheets based on a Media Query or element scrolled in and out of viewport enabling to optimize the CSS for individual devices (e.g. save +100kb of CSS on mobile devices). The plugin makes it possible to enable and disable stylesheets based on the viewport orientation change or element scrolled in or out of view event, making it possible (and easy to manage) to dynamically redesign a website based on events.
 
+### Service Worker Push
+
+The plugin provides a unique innovation called **Service Worker Push**. It is a alternative for HTTP/2 Server Push + Cache-Digest with better performance and better efficiency.
+
+Cache-Digest is not yet an official supported feature. HTTP/2 Server Push without Cache-Digest causes a lot of overhead and has almost no performance advantage.
+
+https://calendar.perfplanet.com/2016/cache-digests-http2-server-push/
+https://jakearchibald.com/2017/h2-push-tougher-than-i-thought/
+
+Cache-Digest calculation for thousands of assets causes overhead. Service Worker Push has direct access to the browser cache storage and is therefor able to support millions of cached assets without performance loss.
+
+Service Worker Push uses PHP method `\O10n\attach_preload()` to attach assets such as images, stylesheets and scripts to a page which are then exposed to a Service Worker using a HTTP header. The Service Worker is then able to preload assets on the basis of a page URL.
+
+```php
+/* Attach assets to page for smart preloading in the Service Worker */
+add_action('init', function() {
+
+    if (function_exists('O10n\attach_preload')) {
+
+        // attach single asset to page
+        \O10n\attach_preload('/path/to/image.jpg');
+
+        // attach multiple assets to page
+        \O10n\attach_preload(array('/path/to/image.jpg', 'https://cdn.google.com/script.js', '/path/to/stylesheet.css'));
+
+    }
+});
+```
+
+The Service Worker Optimization plugin ([PWA Optimization](https://github.com/o10n-x/wordpress-pwa-optimization)) provides an option to preload pages for offline availability and an option to start preloading a page on mouse down. Service Worker Push enables to automatically load all essential assets of a page on the basis of page URLs which makes it easy to make a full website available offline, or to provide an instant navigation experience for pages with many unique assets per page.
+
+### Localstorage
+
+The plugin provides the option to cache stylesheets using localStorage with a HTTP `HEAD` based background updatec.
+
+![localStorage CSS](https://github.com/o10n-x/wordpress-css-optimization/blob/master/docs/images/localstorage-css.png)
+
 ### Critical CSS management
 
 Critical CSS can be conditionally applied using a JSON config system that uses WordPress conditional methods such as `is_single` and `is_product` (WooCommerce) with the option to set attributes and match both individual conditions or a group of conditions as a whole.
@@ -56,6 +93,8 @@ Critical CSS can be conditionally applied using a JSON config system that uses W
 ![Critical CSS management](https://github.com/o10n-x/wordpress-css-optimization/blob/master/docs/images/critical-css-conditions.png)
 
 With debug modus enabled, the browser console will show detailed information about the CSS loading and rendering process including a [Performance API](https://developer.mozilla.org/nl/docs/Web/API/Performance) result for an insight in the CSS loading performance of any given configuration.
+
+![CSS debug console](https://github.com/o10n-x/wordpress-css-optimization/blob/master/docs/images/css-debug-console.png)
 
 The plugin contains an advanced CSS editor with CSS Lint, Clean-CSS code optimization and CSS Beautifier. The editor can be personalized with more than 30 themes.
 
