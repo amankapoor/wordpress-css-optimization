@@ -128,6 +128,8 @@ Critical CSS can be conditionally applied using a JSON config system that uses W
 
 The plugin provides a unique innovation to capture and proxy external script injected stylesheets to pass the [Leverage browser caching](https://developers.google.com/speed/docs/insights/LeverageBrowserCaching) rule from Google PageSpeed Insights.
 
+The proxy can also be used to remove or modify script injected stylesheets.
+
 ![Stylesheet Proxy](https://github.com/o10n-x/wordpress-css-optimization/blob/master/docs/images/proxy.png)
 
 ### CSS Code Search & Replace
