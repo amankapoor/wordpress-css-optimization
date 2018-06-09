@@ -60,7 +60,7 @@ Cache-Digest is not yet an official supported feature. HTTP/2 Server Push withou
 
 Cache-Digest calculation for thousands of assets causes overhead. Service Worker Push has direct access to the browser cache storage and is therefor able to support millions of cached assets without performance loss.
 
-Service Worker Push uses PHP method `\O10n\attach_preload()` to attach assets such as images, stylesheets and scripts to a page which are then exposed to a Service Worker using a HTTP header. The Service Worker is then able to preload assets on the basis of a page URL.
+Service Worker Push uses PHP method `\O10n\attach_preload()` to attach assets such as images, stylesheets and scripts to a page which are then exposed to a Service Worker using a HTTP header. The Service Worker is then able to preload assets intelligently on the basis of a page URL.
 
 ```php
 /* Attach assets to page for smart preloading in the Service Worker */
