@@ -65,7 +65,7 @@ add_filter('o10n_css_custom_minify', function ($CSS, $base_href) {
 ```
 </details>
 
-### Grouped Concatenation with Dependencies
+### Grouped Concatenation
 
 The plugin provides advanced concatenation with the ability to configure concat groups.
 
