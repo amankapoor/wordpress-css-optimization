@@ -43,6 +43,8 @@ The plugin provides the option to minify CSS code using multiple CSS minifiers i
 
 ![CSS Code Optimization](https://github.com/o10n-x/wordpress-css-optimization/blob/master/docs/images/css-code-optimization.png)
 
+### Async loading and timed download and/or render
+
 The plugin provides many unique innovations including conditional Critical CSS, timed CSS loading and/or rendering based on `requestAnimationFrame` with frame target, `requestIdleCallback`, element scrolled into view or a Media Query.
 
 ![Async CSS Optimization](https://github.com/o10n-x/wordpress-css-optimization/blob/master/docs/images/async-optimization.png)
