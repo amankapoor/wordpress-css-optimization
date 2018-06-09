@@ -7,6 +7,7 @@ Advanced CSS optimization toolkit. Critical CSS, minification, concatenation, as
 * [Documentation](https://github.com/o10n-x/wordpress-css-optimization/tree/master/docs)
 * [Description](https://github.com/o10n-x/wordpress-css-optimization#description)
 * [Version history (Changelog)](https://github.com/o10n-x/wordpress-css-optimization/releases)
+* [About WordPress WPO Collection](https://github.com/o10n-x/wordpress-css-optimization#wordpress-wpo-collection)
 
 ## Installation
 
@@ -29,6 +30,38 @@ A recent update of all plugins contains a easy single click install button.
 
 ![image](https://user-images.githubusercontent.com/8843669/39661507-cc1eac5e-5052-11e8-8fba-33c0cc959b07.png)
 </details>
+
+## Description
+
+This plugin is a toolkit for professional CSS optimization.
+
+The plugin provides in a complete solution for CSS code optimization, CSS delivery optimization (async CSS loading) and Critical CSS management.
+
+### Multiple minifiers and custom minifier
+
+The plugin provides the option to minify CSS code using multiple CSS minifiers including [CSSMin](https://github.com/natxet/CssMin) (PHP), Yahoo's [YUI Compressor PHP Port](https://github.com/tubalmartin/YUI-CSS-compressor-PHP-port), a fast regular expression based CSS minifier and the option to use a custom minifier using a WordPress filter that enables to use any solution, including a Amazon Lambda or Google Cloud function with Node.js based CSS optimization software. 
+
+![CSS Code Optimization](https://github.com/o10n-x/wordpress-css-optimization/blob/master/docs/images/css-code-optimization.png)
+
+The plugin provides many unique innovations including conditional Critical CSS, timed CSS loading and/or rendering based on `requestAnimationFrame` with frame target, `requestIdleCallback`, element scrolled into view or a Media Query.
+
+![Async CSS Optimization](https://github.com/o10n-x/wordpress-css-optimization/blob/master/docs/images/async-optimization.png)
+
+The plugin enables to render and unrender stylesheets based on a Media Query or element scrolled in and out of viewport enabling to optimize the CSS for individual devices (e.g. save +100kb of CSS on mobile devices). The plugin makes it possible to enable and disable stylesheets based on the viewport orientation change or element scrolled in or out of view event, making it possible (and easy to manage) to dynamically redesign a website based on events.
+
+### Critical CSS management
+
+Critical CSS can be conditionally applied using a JSON config system that uses WordPress conditional methods such as `is_single` and `is_product` (WooCommerce) with the option to set attributes and match both individual conditions or a group of conditions as a whole.
+
+![Critical CSS management](https://github.com/o10n-x/wordpress-css-optimization/blob/master/docs/images/critical-css-conditions.png)
+
+With debug modus enabled, the browser console will show detailed information about the CSS loading and rendering process including a [Performance API](https://developer.mozilla.org/nl/docs/Web/API/Performance) result for an insight in the CSS loading performance of any given configuration.
+
+The plugin contains an advanced CSS editor with CSS Lint, Clean-CSS code optimization and CSS Beautifier. The editor can be personalized with more than 30 themes.
+
+![Advanced CSS Editor](https://github.com/o10n-x/wordpress-css-optimization/blob/master/docs/images/css-editor.png)
+
+Additional features can be requested on the [Github forum](https://github.com/o10n-x/wordpress-css-optimization/issues).
 
 ## WordPress WPO Collection
 
@@ -63,23 +96,3 @@ For SEO it is therefor simple: websites will need to meet the standards set by t
 A perfect Google Lighthouse Score includes validation of a website as a [Progressive Web App (PWA)](https://developers.google.com/web/progressive-web-apps/).
 
 Google offers another new website performance test that is much tougher than the Google PageSpeed score. It is based on a AI neural network and it can be accessed on https://testmysite.thinkwithgoogle.com
-
-## Description
-
-This plugin is a toolkit for professional CSS optimization.
-
-The plugin provides in a complete solution for CSS code optimization, CSS delivery optimization (async CSS loading) and Critical CSS management.
-
-The plugin provides the option to minify CSS code using multiple CSS minifiers including [CSSMin](https://github.com/natxet/CssMin) (PHP), Yahoo's [YUI Compressor PHP Port](https://github.com/tubalmartin/YUI-CSS-compressor-PHP-port), a fast regular expression based CSS minifier and the option to use a custom minifier using a WordPress filter that enables to use any solution, including a Amazon Lambda or Google Cloud function with Node.js based CSS optimization software. 
-
-The plugin provides many unique innovations including conditional Critical CSS, timed CSS loading and/or rendering based on `requestAnimationFrame` with frame target, `requestIdleCallback`, element scrolled into view or a Media Query.
-
-The plugin enables to render and unrender stylesheets based on a Media Query or element scrolled in and out of viewport enabling to optimize the CSS for individual devices (e.g. save +100kb of CSS on mobile devices). The plugin makes it possible to enable and disable stylesheets based on the viewport orientation change or element scrolled in or out of view event, making it possible (and easy to manage) to dynamically redesign a website based on events.
-
-With debug modus enabled, the browser console will show detailed information about the CSS loading and rendering process including a [Performance API](https://developer.mozilla.org/nl/docs/Web/API/Performance) result for an insight in the CSS loading performance of any given configuration.
-
-The plugin contains an advanced CSS editor with CSS Lint, Clean-CSS code optimization and CSS Beautifier. The editor can be personalized with more than 30 themes.
-
-![Advanced CSS Editor](https://github.com/o10n-x/wordpress-css-optimization/blob/master/docs/images/css-editor.png)
-
-Additional features can be requested on the [Github forum](https://github.com/o10n-x/wordpress-css-optimization/issues).
