@@ -84,7 +84,7 @@ With the mouse-down preload option + Service Worker Push for CSS, the stylesheet
 
 ### Localstorage
 
-The plugin provides the option to cache stylesheets using localStorage with a HTTP `HEAD` based background updatec.
+The plugin provides the option to cache stylesheets using localStorage with a HTTP `HEAD` based background update. LocalStorage has proven to be exceptionally fast, much faster than browser cache.
 
 ![localStorage CSS](https://github.com/o10n-x/wordpress-css-optimization/blob/master/docs/images/localstorage-css.png)
 
