@@ -118,6 +118,12 @@ Critical CSS can be conditionally applied using a JSON config system that uses W
 
 ![Critical CSS management](https://github.com/o10n-x/wordpress-css-optimization/blob/master/docs/images/critical-css-conditions.png)
 
+### External Script Proxy
+
+The plugin provides a unique innovation to capture and proxy external script injected stylesheets to pass the [Leverage browser caching](https://developers.google.com/speed/docs/insights/LeverageBrowserCaching) rule from Google PageSpeed Insights.
+
+![Stylesheet Proxy](https://github.com/o10n-x/wordpress-css-optimization/blob/master/docs/images/proxy.png)
+
 With debug modus enabled, the browser console will show detailed information about the CSS loading and rendering process including a [Performance API](https://developer.mozilla.org/nl/docs/Web/API/Performance) result for an insight in the CSS loading performance of any given configuration.
 
 ![CSS debug console](https://github.com/o10n-x/wordpress-css-optimization/blob/master/docs/images/css-debug-console.png)
