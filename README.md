@@ -80,7 +80,7 @@ add_action('init', function() {
 });
 ```
 
-The Service Worker Optimization plugin ([PWA Optimization](https://github.com/o10n-x/wordpress-pwa-optimization)) provides an option to preload pages for offline availability and an option to start preloading a page on mouse down. Service Worker Push enables to automatically load all essential assets of a page on the basis of page URLs which makes it easy to make a full website available offline, or to provide an instant navigation experience for pages with many unique assets per page.
+The Service Worker Optimization plugin ([PWA Optimization](https://github.com/o10n-x/wordpress-pwa-optimization)) provides an option to preload pages for offline availability and an option to start preloading a page on mouse down. Service Worker Push enables to automatically load all essential assets of a page on the basis of page URLs which makes it easy to make a full website available offline, or to provide an instant navigation experience for websites with many unique assets per page.
 
 With the mouse-down preload option + Service Worker Push for CSS, the stylesheets of a page would start loading in the background as soon as a user touches a link.
 
