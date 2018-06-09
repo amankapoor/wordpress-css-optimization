@@ -98,6 +98,8 @@ With debug modus enabled, the browser console will show detailed information abo
 
 ![CSS debug console](https://github.com/o10n-x/wordpress-css-optimization/blob/master/docs/images/css-debug-console.png)
 
+### Advanced CSS editor
+
 The plugin contains an advanced CSS editor with CSS Lint, Clean-CSS code optimization and CSS Beautifier. The editor can be personalized with more than 30 themes.
 
 ![Advanced CSS Editor](https://github.com/o10n-x/wordpress-css-optimization/blob/master/docs/images/css-editor.png)
