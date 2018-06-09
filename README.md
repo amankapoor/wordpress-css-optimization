@@ -43,6 +43,28 @@ The plugin provides the option to minify CSS code using multiple CSS minifiers i
 
 ![CSS Code Optimization](https://github.com/o10n-x/wordpress-css-optimization/blob/master/docs/images/css-code-optimization.png)
 
+#### Custom minifier
+
+<details/>
+  <summary>Show custom minifier example</summary>
+
+```php
+/* Custom CSS minifier */
+add_filter('o10n_css_custom_minify', function ($CSS, $base_href) {
+
+    // apply CSS optimization
+    exec('/node /path/to/optimize-css.js /tmp/css-source.css');
+    $minified = file_get_contents('/tmp/output.css');
+
+    // alternative
+    $minified = CSSCompressor::minify($CSS);
+
+    return $minified;
+
+});
+```
+</details>
+
 ### Async loading and timed download and/or render
 
 The plugin provides many unique innovations including conditional Critical CSS, timed CSS loading and/or rendering based on `requestAnimationFrame` with frame target, `requestIdleCallback`, element scrolled into view or a Media Query.
