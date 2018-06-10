@@ -338,7 +338,13 @@ class Css extends Controller implements Controller_Interface
         }
 
         // extract <link> and <style> elements from HTML
-        $this->extract($HTML);
+        try {
+            $this->extract($HTML);
+        } catch (Exception $e) {
+            return $HTML;
+        } catch (\Exception $e) {
+            return $HTML;
+        }
 
         // no CSS elements, skip
         if (empty($this->css_elements)) {

@@ -250,11 +250,11 @@ class Criticalcss extends Controller implements Controller_Interface
         $concat_hash = false;
 
         // minify critical CSS
-        if ($criticalcss !== '' && $this->options->bool('css.critical.minify.enabled')) {
+        /*if ($criticalcss !== '' && $this->options->bool('css.critical.minify.enabled')) {
 
             // concat hash
             $concat_hash = md5($criticalcss . json_encode(array($this->options->get('css.critical.minify.cssmin.filters'), $this->options->get('css.critical.minify.cssmin.plugins'))));
- 
+
             // load from cache
             if ($this->cache->exists('css', 'concat', $concat_hash)) {
 
@@ -281,7 +281,7 @@ class Criticalcss extends Controller implements Controller_Interface
                     $this->cache->put('css', 'concat', $concat_hash, $criticalcss, 'critical');
                 }
             }
-        }
+        }*/
 
         if ($this->debug_view) {
             $criticalcss = "/**\n * Critical CSS Editor\n *\n * The extracted Critical CSS has been annotated with file references. \n * The Critical CSS source files are located in the theme directory ".$this->file->safe_path($this->file->theme_directory(array('critical-css')))."\n */\n" . $criticalcss;

@@ -187,7 +187,7 @@ $files_list = $view->critical_css_files();
         <tr valign="top">
             <td>
                 <h5 class="h">File Name</h5>
-                <input type="text" class="file" pattern="^[a-zA-Z0-9-_]+(\.css)?$" placeholder="Filename, e.g. frontpage.css or post-type.css" data-invalid="Invalid filename. Enter a filename with the extension .css." id="critical_css_add_file" style="width:300px;max-width:100%;">
+                <input type="text" class="file" pattern="^[a-zA-Z0-9-_\.]+(\.css)?$" placeholder="Filename, e.g. frontpage.css or post-type.css" data-invalid="Invalid filename. Enter a filename with the extension .css." id="critical_css_add_file" style="width:300px;max-width:100%;">
         
                 <div class="suboption">
                     <h5 class="h">Title (optional)</h5>
@@ -248,7 +248,7 @@ $files_list = $view->critical_css_files();
     </div>
 </div>
 
-<table class="form-table">
+<!--table class="form-table">
     <tr valign="top">
         <th scope="row">Minify</th>
         <td>
@@ -293,7 +293,7 @@ $files_list = $view->critical_css_files();
 ?>
         </tbody>
     </table>
-</div>
+</div-->
 
 <table class="form-table">
     <tr>

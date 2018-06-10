@@ -29,6 +29,7 @@ $output = '<!DOCTYPE html>
 <head>
 <title>Critical CSS Editor - Above The Fold Optimization</title>
 <meta name="robots" content="noindex, nofollow" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, min-width=300, shrink-to-fit=yes" />
 <link rel="stylesheet" href="'.$plugin_uri.'public/css/view-css-editor.css" />
 '.$editor_theme_css.'
 <link rel="stylesheet" href="'.includes_url('/css/dashicons.min.css?ver=4.9.2').'" />

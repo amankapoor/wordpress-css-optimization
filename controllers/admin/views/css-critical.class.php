@@ -233,10 +233,10 @@ class AdminViewCssCritical extends AdminViewBase
         }
 
         // verify path
-        if (!preg_match('|^[a-zA-Z0-9\-\_]+\.css$|Ui', $filename)) {
+        if (!preg_match('|^[a-zA-Z0-9\-\_\.]+\.css$|Ui', $filename)) {
 
             // automatically add .css
-            if (preg_match('|^[a-zA-Z0-9\-\_]+\.css$|Ui', $filename)) {
+            if (preg_match('|^[a-zA-Z0-9\-\_\.]+$|Ui', $filename)) {
                 $filename .= '.css';
             } else {
                 $request->output_errors(__('Invalid filename. Enter a filename with the extension .css.', 'o10n'));
@@ -423,11 +423,12 @@ class AdminViewCssCritical extends AdminViewBase
         // Critical CSS code optimization
         $forminput->type_verify(array(
             'css.critical.http2.enabled' => 'bool',
-            'css.critical.editor_public.enabled' => 'bool',
-            'css.critical.minify.enabled' => 'bool'
+            'css.critical.editor_public.enabled' => 'bool'
+            //'css.critical.minify.enabled' => 'bool'
         ));
 
         // cssmin
+        /*
         $forminput->type_verify(array(
             'css.critical.minify.cssmin.filters.ImportImports' => 'bool',
             'css.critical.minify.cssmin.filters.RemoveComments.enabled' => 'bool',
@@ -452,6 +453,7 @@ class AdminViewCssCritical extends AdminViewBase
                 'css.critical.minify.cssmin.filters.RemoveComments.whitelist' => 'string'
             ));
         }
+        */
 
         // sort files
         $sort_files = $forminput->get('sort');
