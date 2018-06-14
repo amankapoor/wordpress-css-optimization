@@ -1407,7 +1407,7 @@ class CssParser
             if ($config !== false) {
                 $class = "Css" . $name . "ParserPlugin";
                 $config = is_array($config) ? $config : array();
-                if (class_exists(__NAMESPACE__ . '\\' . $class)) {
+                if (class_exists(__NAMESPACE__ . '\\' . $class, false)) {
                     $classname = __NAMESPACE__ . '\\' . $class;
                     $this->plugins[] = new $classname($this, $config);
                 } else {
@@ -1913,7 +1913,7 @@ class CssMinifier
             if ($config !== false) {
                 $class = "Css" . $name . "MinifierFilter";
                 $config = is_array($config) ? $config : array();
-                if (class_exists(__NAMESPACE__ . '\\' . $class)) {
+                if (class_exists(__NAMESPACE__ . '\\' . $class, false)) {
                     $classname = __NAMESPACE__ . '\\' . $class;
                     $this->filters[] = new $classname($this, $config);
                 } else {
@@ -1926,7 +1926,7 @@ class CssMinifier
             if ($config !== false) {
                 $class = "Css" . $name . "MinifierPlugin";
                 $config = is_array($config) ? $config : array();
-                if (class_exists(__NAMESPACE__ . '\\' . $class)) {
+                if (class_exists(__NAMESPACE__ . '\\' . $class, false)) {
                     $classname = __NAMESPACE__ . '\\' . $class;
                     $this->plugins[] = new $classname($this, $config);
                 } else {
@@ -2167,7 +2167,7 @@ class CssMin
         // Otherwise include all class files
         else {
             foreach (self::$classIndex as $class => $file) {
-                if (!class_exists(__NAMESPACE__ . '\\' . $class)) {
+                if (!class_exists(__NAMESPACE__ . '\\' . $class, false)) {
                     require_once($file);
                 }
             }
@@ -3629,7 +3629,7 @@ class CssCompressExpressionValuesMinifierPlugin extends aCssMinifierPlugin
      */
     public function apply(aCssToken &$token)
     {
-        if (class_exists(__NAMESPACE__ . '\\' . "JSMin") && stripos($token->Value, "expression(") !== false) {
+        if (class_exists(__NAMESPACE__ . '\\' . "JSMin", false) && stripos($token->Value, "expression(") !== false) {
             $value = $token->Value;
             $value = substr($token->Value, stripos($token->Value, "expression(") + 10);
             $value = trim(JSMin::minify($value));

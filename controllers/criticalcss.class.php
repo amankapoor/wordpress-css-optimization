@@ -392,7 +392,7 @@ class Criticalcss extends Controller implements Controller_Interface
         $this->last_used_minifier = false;
 
         // load PHP minifier
-        if (!class_exists('O10n\CssMin')) {
+        if (!class_exists('\O10n\CssMin', false)) {
             
             // autoloader
             require_once $this->core->modules('css')->dir_path() . 'lib/CssMin.php';

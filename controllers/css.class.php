@@ -1899,7 +1899,7 @@ class Css extends Controller implements Controller_Interface
                 }
 
                 // load library
-                if (!class_exists('O10n\CssMin')) {
+                if (!class_exists('\O10n\CssMin', false)) {
                     require_once $this->core->modules('css')->dir_path() . 'lib/CssMin.php';
                 }
 
@@ -1934,7 +1934,7 @@ class Css extends Controller implements Controller_Interface
             case "yui":
 
                 // load library
-                if (!class_exists('tubalmartin\CssMin\Minifier')) {
+                if (!class_exists('tubalmartin\CssMin\Minifier', false)) {
                     try {
                         require_once $this->core->modules('css')->dir_path() . 'lib/YUI_Utils.php';
                         require_once $this->core->modules('css')->dir_path() . 'lib/YUI_Colors.php';
@@ -2006,7 +2006,7 @@ class Css extends Controller implements Controller_Interface
             default:
 
                 // load library
-                if (!class_exists('O10n\Minify_CSS_Compressor')) {
+                if (!class_exists('\O10n\Minify_CSS_Compressor', false)) {
                     try {
                         require_once $this->core->modules('css')->dir_path() . 'lib/Compressor.php';
                     } catch (\Exception $err) {
