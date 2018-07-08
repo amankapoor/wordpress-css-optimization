@@ -100,6 +100,20 @@ class Css extends Controller implements Controller_Interface
             return;
         }
 
+        // setup on WordPress init hook
+        add_action('init', array($this, 'init_setup'), PHP_INT_MAX);
+    }
+
+    /**
+     * Setup controller on WordPress init
+     */
+    final public function init_setup()
+    {
+        // disabled
+        if (!$this->env->enabled('css')) {
+            return;
+        }
+
         // debug modus
         $this->debug_mode = (defined('O10N_DEBUG') && O10N_DEBUG);
 
