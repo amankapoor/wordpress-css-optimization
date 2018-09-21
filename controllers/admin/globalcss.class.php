@@ -40,7 +40,7 @@ class AdminGlobalcss extends ModuleAdminController implements Module_Admin_Contr
         add_action('admin_bar_menu', array( $this, 'admin_bar'), 100);
 
         // add critical CSS widget extension to client
-        $this->client->after('client', '<script>o10n.constructor.prototype.extract=function(t){(function(d,c,s){s=d.createElement(\'script\');s.async=true;s.onload=c;s.src=' . json_encode($this->core->modules('css')->dir_url() . 'public/js/critical-css-widget.min.js').';d.head.appendChild(s);})(document,function(){o10n.extract(t);});}</script>');
+        $this->client->after('client', '<script>var o10n=o10n||function(){};o10n.constructor.prototype.extract=function(t){(function(d,c,s){s=d.createElement(\'script\');s.async=true;s.onload=c;s.src=' . json_encode($this->core->modules('css')->dir_url() . 'public/js/critical-css-widget.min.js').';d.head.appendChild(s);})(document,function(){o10n.extract(t);});}</script>');
     }
 
     /**
