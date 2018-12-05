@@ -869,7 +869,25 @@ class Css extends Controller implements Controller_Interface
                 // load / render position
                 $load_position = (isset($concat_group_settings[$concat_group]['load_position'])) ? $concat_group_settings[$concat_group]['load_position'] : $this->load_position;
                 if ($load_position === 'timing') {
-                    $load_timing = (isset($concat_group_settings[$concat_group]['load_timing'])) ? $concat_group_settings[$concat_group]['load_timing'] : $this->load_timing;
+                    if (isset($concat_group_settings[$concat_group]['load_timing'])) {
+                        $load_timing = $concat_group_settings[$concat_group]['load_timing'];
+                        if (is_array($load_timing) && isset($load_timing['type'])) {
+                            switch ($load_timing['type']) {
+                                case "media":
+
+                                    // add responsive exec module
+                                    $this->client->load_module('responsive');
+                                break;
+                                case "inview":
+
+                                    // add inview exec module
+                                    $this->client->load_module('inview');
+                                break;
+                            }
+                        }
+                    } else {
+                        $load_timing = $this->load_timing;
+                    }
                 } else {
                     $load_timing = false;
                 }
