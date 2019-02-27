@@ -1825,6 +1825,12 @@ class Css extends Controller implements Controller_Interface
 
             try {
                 $href = (isset($sheet['href'])) ? $sheet['href'] : (((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+
+                // translate protocol relative URL for URL rebasing
+                if (substr($sheet['href'], 0, 2) === '//') {
+                    $href = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']) ? 'https' : 'http') . ':' . $href;
+                }
+
                 $minified = $this->minify(array(array('css' => $cssText)), $href, ((isset($sheet['minifier'])) ? $sheet['minifier'] : $this->minifier));
             } catch (Exception $err) {
                 // @todo
