@@ -46,7 +46,6 @@ The plugins are able to deliver results for SEO. Our www.e-scooter.co demo websi
 ![image](https://user-images.githubusercontent.com/8843669/49431914-c964d980-f7ae-11e8-9a60-f5fb3cfd733d.png)
 
 It will take a bit more effort, and maybe some more feedback from users, but then the WPO plugins could simply be 'perfect' for getting Google Lighthouse 100-scores and even better performance results (speed) than would be required for a 100-score (think of the unique innovations such as timed javascript execution and CSS rendering, advanced Web Worker based preload logic, preload on mouse-down and [Service Worker Push](https://github.com/o10n-x/wordpress-http2-optimization/wiki/HTTP-2-Server-Push-vs-Service-Worker-Push) with better performance than HTTP/2 Server Push).
-## Installation
 
 ## Description
 
