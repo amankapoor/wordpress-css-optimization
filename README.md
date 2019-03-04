@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/o10n-x/wordpress-css-optimization.svg?branch=master)](https://travis-ci.org/o10n-x/wordpress-css-optimization) ![Version](https://img.shields.io/github/release/o10n-x/wordpress-css-optimization.svg)
 
-# WordPress CSS Optimization
+# WordPress CSS Optimization [beta]
 
 Advanced CSS optimization toolkit. Critical CSS, minification, concatenation, async loading, advanced editor, CSS Lint, Clean CSS (professional), beautifier and more.
 
